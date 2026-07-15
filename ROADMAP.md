@@ -17,14 +17,16 @@ Cada tarea tiene un dueño:
 El frontend (`UVA App.dc.html`) es la fuente de verdad visual: hay que reproducirlo *pixel-perfect* en el stack de producción, no copiar su estructura interna (es un prototipo HTML/CSS/JS de una herramienta de diseño, no código de producción).
 
 **Stack objetivo** (combinando el brief y la ficha técnica, sección 30):
-- App consumidor: **Expo Router + React Native + React Native Web**, TypeScript estricto, NativeWind, Zustand, TanStack Query, React Hook Form.
+- App consumidor: **Expo Router + React Native + React Native Web** (Expo **SDK 54**, alineado con la versión de Expo Go disponible en Play Store para permitir testing nativo en dispositivo), TypeScript estricto, NativeWind, Zustand, TanStack Query, React Hook Form.
 - Web admin: **Next.js** (separado, desktop-first), misma identidad visual.
 - Backend: **NestJS + TypeScript**, **PostgreSQL** (+ pgvector para memoria/personalización), **Redis** (cache/colas/sesión), almacenamiento compatible S3.
 - IA: capa de proveedores abstraída para **LLM (DeepSeek V4 Pro candidato)**, **STT** y **TTS** independientes — reemplazables sin tocar la app.
 - Comercio: **WooCommerce REST API** (credenciales solo en backend) + **Mercado Pago** vía checkout de WooCommerce.
 - Monorepo sugerido (Turborepo/Nx) para compartir tipos entre app, admin y backend.
 
-> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto). Fase 1 (design system + shell de navegación) está lista y verificada con `npx expo export --platform web`. Ver detalle marcado ✅ más abajo.
+> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1 y 2 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
+>
+> **Cómo correr la app** — Web: `cd apps/mobile && npx expo export --platform web` (o `npx expo start --web`). Nativo (Android, con teléfono en modo desarrollador por USB): `cd apps/mobile && npx expo start`, luego escanear el QR con Expo Go, o `adb reverse tcp:8081 tcp:8081` + abrir `exp://127.0.0.1:8081` en Expo Go.
 
 ---
 
