@@ -1,0 +1,1160 @@
+Actúa como Lead Product Designer, UX Designer y Senior Frontend Engineer especializado en aplicaciones móviles de salud y bienestar femenino.
+
+Necesito que diseñes y construyas un frontend funcional, navegable, responsive y de alta fidelidad para UVA App.
+
+IMPORTANTE:
+No quiero solamente wireframes, una descripción, un moodboard ni imágenes estáticas. Quiero una aplicación frontend ejecutable, con navegación real, componentes reutilizables, estados interactivos, datos simulados y una estructura preparada para conectar posteriormente con el backend.
+
+Antes de diseñar o programar:
+
+1. Lee completamente el archivo adjunto:
+   “Ficha_Funcional_Tecnica_UVA_App_Beta_v1.0.pdf”.
+
+2. Analiza el sitio actual de la marca:
+   https://copauva.com/
+
+3. Analiza los logos adjuntos:
+   - Logo original de UVA.
+   - Logo de UVA App.
+
+4. Usa la siguiente prioridad para resolver cualquier contradicción:
+   a. Las decisiones expresadas en este prompt.
+   b. La ficha funcional y técnica adjunta.
+   c. El logo y la identidad actual de UVA.
+   d. El sitio web copauva.com.
+
+No utilices los colores morados de diagramación del PDF como identidad visual de la app. El PDF es un documento técnico, no un manual de marca.
+
+==================================================
+1. OBJETIVO DEL PRODUCTO
+==================================================
+
+UVA App será una plataforma de acompañamiento femenino enfocada inicialmente en:
+
+- Registro y predicción menstrual básica.
+- Uso de copa, disco y panties menstruales.
+- Bienestar del piso pélvico.
+- Rutinas generales de conciencia, respiración y relajación.
+- Tres niveles de rutinas con Bolas Kegel UVA.
+- Orientación conversacional mediante Vera.
+- Acceso contextual a los productos de UVA.
+- Compra mediante la tienda WooCommerce existente.
+
+La aplicación puede ser utilizada por cualquier persona, incluso si no posee productos UVA.
+
+Su promesa principal es:
+
+“No solo te dice cuándo llega tu periodo. Te ayuda a prepararte, cuidarte y entender qué funciona para ti.”
+
+No debe sentirse como una tienda disfrazada de calendario menstrual.
+
+==================================================
+2. PLATAFORMAS Y TECNOLOGÍA
+==================================================
+
+Construye el frontend principal con:
+
+- Expo Router.
+- React Native.
+- React Native Web.
+- TypeScript estricto.
+- NativeWind o un sistema equivalente de tokens reutilizables.
+- TanStack Query para la futura comunicación con APIs.
+- Zustand para estados locales y sesión simulada.
+- React Hook Form y validación tipada.
+- Lucide Icons o una librería de iconos limpia y consistente.
+- Expo Secure Store para representar almacenamiento seguro.
+- Expo WebBrowser para representar la apertura de WooCommerce.
+- Componentes compatibles con Android, iPhone y web.
+
+La arquitectura debe ser mobile-first, pero funcionar correctamente en web.
+
+Resoluciones mínimas que deben verse correctamente:
+
+- 360 × 800 px.
+- 375 × 812 px.
+- 390 × 844 px.
+- 768 px de ancho.
+- 1440 px de ancho.
+
+No construyas todavía un backend real.
+
+Crea servicios desacoplados y datos simulados para:
+
+- Autenticación.
+- Perfil.
+- Ciclo menstrual.
+- Registros diarios.
+- Conversaciones con Vera.
+- Reconocimiento de voz.
+- Síntesis de voz.
+- Rutinas.
+- Productos.
+- WooCommerce.
+- Promociones.
+- Notificaciones.
+- Pedidos.
+- Machine learning y personalización.
+
+No incluyas claves, secretos ni credenciales reales.
+
+Incluye un archivo `.env.example`.
+
+==================================================
+3. IDENTIDAD VISUAL
+==================================================
+
+La aplicación debe conservar el reconocimiento de UVA, pero debe sentirse como una evolución digital más sofisticada.
+
+Dirección visual:
+
+- Femenina sin infantilizar.
+- Premium.
+- Cercana.
+- Elegante.
+- Limpia.
+- Suave.
+- Moderna.
+- Con mucho espacio en blanco.
+- Emocional sin verse esotérica.
+- Relacionada con bienestar, no con enfermedad.
+- Evitar apariencia de hospital o aplicación clínica.
+- Evitar estética excesivamente rosa, romántica o adolescente.
+
+Usa el logo adjunto de UVA App como logo principal.
+
+Color principal de referencia del logo:
+
+- Rosa UVA aproximado: #CD2F62.
+
+Antes de cerrar los tokens, analiza el logo y el sitio para extraer los colores reales. Si no es posible obtenerlos con precisión, usa esta base:
+
+- Primary UVA: #CD2F62.
+- Primary dark: #9E234C.
+- Primary soft: #FBE8EF.
+- Primary extra soft: #FFF5F8.
+- White: #FFFFFF.
+- Background: #FCFAFB.
+- Text primary: #282326.
+- Text secondary: #6F666B.
+- Border: #EDE4E8.
+- Success: un verde apagado accesible.
+- Warning: un tono ámbar suave.
+- Error: un rojo sobrio.
+
+No abuses de gradientes. Prioriza superficies blancas, rosa UVA plano, tonos suaves y contraste accesible.
+
+Estilo de interfaz:
+
+- Bordes redondeados entre 16 y 24 px.
+- Botones principales sólidos.
+- Tarjetas suaves y ligeras.
+- Sombras discretas.
+- Ilustraciones orgánicas.
+- Iconografía lineal y femenina.
+- Microinteracciones elegantes.
+- Estados de presión, foco, selección y desactivado.
+- Tipografía contemporánea, legible y cálida.
+- Usar preferiblemente Manrope, DM Sans o una alternativa similar.
+- Jerarquía tipográfica clara.
+- Tamaño mínimo legible de 14 px.
+- Botones y áreas táctiles de mínimo 44 × 44 px.
+
+No uses fotografías genéricas de mujeres como recurso principal.
+
+==================================================
+4. VERA
+==================================================
+
+Vera será la compañera conversacional 3D de UVA App, pero actualmente se encuentra en desarrollo.
+
+No inventes el diseño definitivo de Vera.
+
+Crea un componente central reemplazable llamado:
+
+`VeraAvatar`
+
+Debe aceptar estados como:
+
+- idle
+- greeting
+- listening
+- thinking
+- speaking
+- guiding
+- celebrating
+- concerned
+- unavailable
+
+Mientras llegan sus archivos definitivos, utiliza un placeholder elegante y abstracto inspirado en la identidad UVA:
+
+- Una silueta orgánica.
+- Una esfera o forma viva.
+- Un marco suave con el símbolo UVA.
+- Una animación sutil de respiración.
+- Nunca una mujer genérica tomada de stock.
+- Nunca un avatar infantil.
+- Nunca una figura excesivamente sexualizada.
+
+Toda la interfaz debe quedar preparada para reemplazar el placeholder por:
+
+- Render PNG o WebP.
+- Video transparente.
+- Lottie.
+- Archivo 3D.
+- Animación exportada desde Blender.
+- Clips de Vera creados posteriormente.
+
+No dependas de que el activo final exista para que la app funcione.
+
+==================================================
+5. ESTRUCTURA DE NAVEGACIÓN
+==================================================
+
+Usa una barra inferior con cinco accesos:
+
+1. Hoy
+2. Calendario
+3. Vera
+4. Rutinas
+5. Tienda
+
+Vera debe ocupar la posición central y ser visualmente más reconocible.
+
+El perfil se abre desde la cabecera.
+
+En web:
+
+- Mantén una experiencia centrada similar a una app.
+- Usa sidebar en resoluciones amplias si mejora la navegación.
+- No estires excesivamente el contenido.
+- Usa un ancho máximo cómodo para las áreas personales.
+- La tienda puede aprovechar una cuadrícula más amplia.
+
+==================================================
+6. FLUJO DE PRIMER INGRESO
+==================================================
+
+Construye las siguientes pantallas y estados:
+
+1. Splash screen con el logo de UVA App.
+2. Presentación inicial de Vera.
+3. Elección:
+   - Hablar con Vera.
+   - Prefiero escribir.
+4. Explicación breve sobre privacidad.
+5. Consentimiento para datos generales.
+6. Consentimiento independiente para datos sensibles.
+7. Acceso:
+   - Correo y contraseña.
+   - Google.
+   - Apple.
+   - Facebook.
+   - Número de teléfono.
+   - Continuar temporalmente sin cuenta.
+8. Recuperación de contraseña.
+9. Verificación por código.
+10. Configuración biométrica opcional.
+
+No desarrolles Instagram Login como método independiente.
+
+==================================================
+7. ONBOARDING CONVERSACIONAL
+==================================================
+
+El onboarding debe sentirse como una conversación progresiva con Vera, no como un formulario largo.
+
+Debe tener:
+
+- Indicador de progreso discreto.
+- Botón para omitir preguntas opcionales.
+- Opción de responder por texto.
+- Botón pulsar-para-hablar.
+- Respuestas rápidas mediante chips o tarjetas.
+- Posibilidad de volver a la pregunta anterior.
+- Resumen final editable.
+
+Preguntas principales:
+
+- ¿Cómo quieres que te llame?
+- ¿Qué te gustaría trabajar primero?
+- ¿Actualmente menstruas?
+- ¿Cuándo comenzó tu último periodo?
+- ¿Cuántos días suele durar tu menstruación?
+- ¿Tu ciclo suele ser regular?
+- ¿Qué productos UVA tienes actualmente?
+- ¿Quieres que Vera responda de forma breve, paso a paso, cercana o más técnica?
+- ¿Quieres utilizar el micrófono?
+- ¿Qué tan discretos deben ser tus recordatorios?
+- ¿En qué momento del día prefieres tus rutinas?
+
+Opciones de situación menstrual:
+
+- Sí, menstruo.
+- Mi ciclo es irregular.
+- Estoy embarazada.
+- Estoy en posparto.
+- Estoy en perimenopausia o menopausia.
+- No menstruo actualmente.
+- Prefiero no responder.
+
+La usuaria debe poder continuar aunque responda:
+
+- No lo sé.
+- No lo recuerdo.
+- Ninguno.
+- Prefiero no responder.
+
+==================================================
+8. SELECCIÓN DE PRODUCTOS UVA
+==================================================
+
+Incluye una pantalla de selección múltiple con buscador, categorías, imágenes, checkbox y opción “No tengo productos UVA”.
+
+Categorías:
+
+Copas y discos:
+- Copa Menstrual UVA 2 talla 0.
+- Copa Menstrual UVA 2 talla A.
+- Copa Menstrual UVA 2 talla B.
+- Copa Menstrual UVA talla A.
+- Copa Menstrual Lily Cup talla B.
+- Disco Menstrual UVA.
+
+Kits:
+- Kit Cuídate UVA talla 0.
+- Kit Cuídate UVA talla A.
+- Kit Cuídate UVA talla B.
+- Kit Bienestar UVA talla 0.
+- Kit Bienestar UVA talla A.
+- Kit Bienestar UVA talla B.
+
+Menstruación y complementos:
+- Panties Menstruales.
+- Esterilizador eléctrico para copas.
+- Vaso esterilizador.
+- Limpiador de Copa Menstrual UVA.
+- Almohadilla para Cólico Menstrual.
+
+Cuidado íntimo:
+- Jabón Íntimo UVA en espuma.
+- Jabón Íntimo UVA Fresh.
+- Lubricante para copa menstrual.
+- Lubricantes íntimos Elixir.
+- Hidratante Íntimo UVA.
+- Toallitas Compactas UVA.
+- Limpiador de Juguetes Elixir.
+- Dilatadores Vaginales.
+- Bolas Kegel UVA.
+
+La respuesta “No tengo productos UVA” es completamente válida y no debe bloquear funciones.
+
+No incluyas escaneo QR en esta versión.
+
+==================================================
+9. PANTALLA PRINCIPAL: HOY CON VERA
+==================================================
+
+Diseña una pantalla inicial útil, personal y tranquila.
+
+Debe contener:
+
+- Saludo personalizado.
+- Acceso al perfil.
+- Vera o su placeholder.
+- Resumen del ciclo.
+- Rango estimado del próximo periodo.
+- Estado del registro de hoy.
+- Tarjeta “Tu cuerpo hoy”.
+- Tarjeta “Tu rutina”.
+- Tarjeta “Prepárate”.
+- Botón destacado “Hablar con Vera”.
+- Acceso rápido “Necesito ayuda ahora”.
+- Productos que la usuaria tiene.
+- Recomendación comercial opcional, contextual y claramente identificada.
+- Promociones o anuncios administrables sin interrumpir contenido sensible.
+
+Ejemplo de contenido:
+
+“Según tus registros, tu periodo podría iniciar en 4 a 6 días.”
+
+“En tus últimos ciclos registraste mayor flujo durante la segunda noche.”
+
+“Te preparé una rutina de respiración de 3 minutos.”
+
+Evita afirmaciones universales sobre hormonas.
+
+==================================================
+10. CHECK-IN DIARIO
+==================================================
+
+Construye un flujo rápido mediante bottom sheet o modal.
+
+Campos:
+
+- Flujo.
+- Dolor o cólicos.
+- Energía.
+- Estado de ánimo.
+- Síntomas.
+- Producto utilizado.
+- Nota escrita.
+- Registro mediante voz.
+
+Debe completarse en pocos segundos.
+
+Incluye estados de:
+
+- Sin síntomas.
+- Registro parcial.
+- Guardado exitoso.
+- Edición.
+- Error.
+- Sin conexión.
+
+==================================================
+11. CALENDARIO MENSTRUAL
+==================================================
+
+Diseña:
+
+- Vista mensual.
+- Vista de resumen.
+- Días registrados.
+- Días estimados.
+- Rango probable del siguiente periodo.
+- Intensidad de flujo.
+- Síntomas.
+- Producto utilizado.
+- Botón para registrar inicio o fin del periodo.
+- Leyenda visual accesible.
+- Historial de ciclos.
+- Indicador de poca información.
+- Ciclos irregulares.
+- Posibilidad de corregir registros.
+
+La predicción es básica.
+
+No incluyas:
+
+- Predicción anticonceptiva.
+- Promesas de fertilidad.
+- Diagnósticos.
+- Afirmaciones absolutas.
+
+Con pocos datos debe mostrar mensajes como:
+
+“Necesito más registros para estimar mejor tu próximo periodo.”
+
+==================================================
+12. CONVERSACIÓN CON VERA
+==================================================
+
+Construye una interfaz de chat moderna y emocional.
+
+Debe permitir:
+
+- Texto.
+- Pulsar para hablar.
+- Visualizar la transcripción.
+- Editar la transcripción antes de guardarla.
+- Recibir respuesta escrita.
+- Activar o desactivar respuesta hablada.
+- Detener la voz de Vera.
+- Calificar la respuesta.
+- Solicitar otra explicación.
+- Elegir respuesta breve o detallada.
+
+Estados visuales:
+
+- Escuchando.
+- Procesando.
+- Vera está pensando.
+- Vera está hablando.
+- Error de micrófono.
+- Sin conexión.
+- Tiempo de espera.
+- Contenido sensible.
+- Derivación a ayuda profesional.
+
+No implementes escucha permanente ni activación por “Hola, Vera”.
+
+Usa servicios mock como:
+
+- `speechToTextService`
+- `veraChatService`
+- `textToSpeechService`
+
+==================================================
+13. MODO PRIMERA COPA
+==================================================
+
+Crea una experiencia guiada completa, no un artículo estático.
+
+Etapas:
+
+1. Antes de comenzar.
+2. Conocer la copa.
+3. Preparación y limpieza.
+4. Selección de doblez.
+5. Posición corporal.
+6. Inserción.
+7. Comprobación de apertura.
+8. Uso y tiempo.
+9. Retiro.
+10. Limpieza.
+11. Almacenamiento.
+12. Evaluación de la experiencia.
+13. Problemas frecuentes.
+14. Preparación para el siguiente ciclo.
+
+Debe permitir:
+
+- Guardar avance.
+- Repetir pasos.
+- Ver clips de Vera.
+- Marcar “lo logré”.
+- Marcar “necesito ayuda”.
+- Registrar comodidad.
+- Registrar filtraciones.
+- Registrar dolor o incomodidad.
+- Ir a Modo Rescate.
+
+Usa placeholders reemplazables para las animaciones de Vera.
+
+==================================================
+14. MODO RESCATE
+==================================================
+
+Incluye un acceso visible:
+
+“Necesito ayuda ahora”
+
+Opciones iniciales:
+
+- Mi copa no abre.
+- Tengo filtraciones.
+- No puedo retirar la copa.
+- No sé si está bien puesta.
+- Me manché.
+- Tengo cólicos.
+- Olvidé limpiar mi copa.
+- No sé si usar copa, disco o panty.
+- Siento dolor o incomodidad.
+- Otro problema.
+
+La interfaz debe:
+
+- Reducir distracciones.
+- No mostrar anuncios.
+- No mostrar promociones.
+- Presentar pasos breves.
+- Permitir hablar con Vera.
+- Mostrar advertencias cuando corresponda.
+- Recomendar suspender el uso si existe dolor relevante.
+- No emitir diagnósticos.
+
+==================================================
+15. RUTINAS Y PISO PÉLVICO
+==================================================
+
+Crea un hub de rutinas con:
+
+- Conciencia corporal.
+- Respiración y relajación.
+- Coordinación.
+- Fortalecimiento inicial.
+- Resistencia.
+- Rutina con Bolas Kegel.
+- Historial.
+- Progreso.
+- Preferencias de duración.
+
+Antes de Kegel debe existir una evaluación orientativa.
+
+Preguntas:
+
+- ¿Cuál es tu objetivo?
+- ¿Has realizado estos ejercicios anteriormente?
+- ¿Puedes identificar cuándo contraes y relajas?
+- ¿Tienes escapes al toser, correr o saltar?
+- ¿Sientes dolor o presión?
+- ¿Tienes dificultad para relajar?
+- ¿Estás embarazada o en posparto?
+- ¿Un profesional te ha recomendado una rutina?
+- ¿Tienes Bolas Kegel UVA?
+
+Reglas visuales y funcionales:
+
+- Las rutinas sin bolas están disponibles para todas las usuarias elegibles.
+- Los tres niveles con bolas solo aparecen si la usuaria declara tenerlas y supera el filtro inicial.
+- Los niveles representan progresión gradual.
+- No avanzar automáticamente solo por completar una sesión.
+- Pedir autoevaluación de comodidad, control y ausencia de dolor.
+- Nunca afirmar que la app detectó una contracción correcta.
+- Usar “rutina completada”, no “contracción perfecta”.
+- Mostrar advertencias cuando haya dolor, presión o dificultad para relajar.
+
+Rutina activa:
+
+- Temporizador.
+- Animación de respiración.
+- Instrucción actual.
+- Pausa.
+- Reanudar.
+- Finalizar.
+- Audio opcional.
+- Vibración/hápticos opcionales.
+- Autoevaluación final.
+
+==================================================
+16. MIS PRODUCTOS
+==================================================
+
+Crea una sección donde la usuaria pueda:
+
+- Ver qué productos tiene.
+- Agregar o eliminar productos.
+- Indicar si los usa actualmente.
+- Consultar instrucciones.
+- Abrir rutinas relacionadas.
+- Ver limpieza y cuidado.
+- Ver preguntas frecuentes.
+- Acceder a la tienda.
+- Ver historial de uso cuando aplique.
+
+Estados:
+
+- No tiene productos.
+- Tiene productos, pero no los usa.
+- No recuerda la referencia.
+- Producto agotado.
+- Producto descontinuado.
+- Producto con contenido pendiente.
+
+==================================================
+17. TIENDA UVA
+==================================================
+
+Construye una tienda integrada visualmente con la app.
+
+La fuente futura será WooCommerce.
+
+Para el prototipo utiliza productos mock basados en el catálogo real de UVA.
+
+Secciones:
+
+- Recomendados para ti.
+- Menstruación.
+- Copas y discos.
+- Kits.
+- Complementos.
+- Cuidado íntimo.
+- Piso pélvico.
+- Belleza.
+- Maternidad.
+- Ofertas.
+
+La beta funcional se concentra en menstruación y piso pélvico, pero la tienda puede mostrar el catálogo completo.
+
+Producto:
+
+- Imagen.
+- Nombre.
+- Precio en COP.
+- Precio promocional.
+- Estado de inventario.
+- Valoración.
+- Descripción breve.
+- Por qué podría ser relevante.
+- “Ya lo tengo”.
+- “Agregar a mis productos”.
+- “Ver en UVA”.
+- “Comprar”.
+
+La compra no se procesa de manera nativa en el frontend.
+
+Al pulsar comprar:
+
+- Simula abrir una ventana segura dentro de la app.
+- Destino configurable hacia la landing del producto en WooCommerce.
+- Usa Expo WebBrowser o equivalente.
+- Conserva una acción clara para volver a UVA App.
+- No simules datos de tarjetas.
+- No construyas un checkout falso.
+- Mercado Pago y WooCommerce procesarán realmente la compra cuando se conecte el backend.
+
+Crea un adaptador:
+
+`wooCommerceService`
+
+Debe contemplar:
+
+- products
+- categories
+- variations
+- prices
+- stock
+- productUrl
+- checkoutUrl
+- orderStatus
+
+==================================================
+18. PERFIL Y PRIVACIDAD
+==================================================
+
+Incluye:
+
+- Mis objetivos.
+- Mi ciclo.
+- Mis productos.
+- Preferencias de Vera.
+- Voz y audio.
+- Notificaciones.
+- Modo discreto.
+- Biometría.
+- Cuenta.
+- Pedidos.
+- Privacidad.
+- Descargar mis datos.
+- Eliminar mi cuenta.
+- Cerrar sesión.
+
+Crea una sección destacada:
+
+“Lo que Vera sabe de mí”
+
+Debe permitir:
+
+- Ver recuerdos.
+- Corregir información.
+- Eliminar un recuerdo.
+- Desactivar memoria.
+- Borrar historial conversacional.
+- Diferenciar datos declarados de inferencias.
+- Explicar por qué se usa un dato.
+
+==================================================
+19. PERSONALIZACIÓN SIMULADA
+==================================================
+
+Representa visualmente una capa de personalización basada en:
+
+- Nombre.
+- Objetivos.
+- Productos.
+- Preferencias.
+- Horarios.
+- Duración favorita.
+- Rutinas completadas.
+- Contenido consultado.
+- Respuestas calificadas.
+- Registros menstruales.
+- Recomendaciones ignoradas o aceptadas.
+
+No entrenes ningún modelo.
+
+Crea interfaces simuladas como:
+
+- `userMemoryService`
+- `recommendationService`
+- `personalizationService`
+
+Incluye una pantalla de ejemplo donde la usuaria pueda ver cómo se personalizó una recomendación.
+
+==================================================
+20. NOTIFICACIONES
+==================================================
+
+Crea configuración para:
+
+- Recordatorio de registro.
+- Próximo periodo.
+- Preparar productos.
+- Rutina.
+- Cuidado y limpieza.
+- Seguimiento de Primera Copa.
+- Promociones.
+- Pedidos.
+
+Niveles de discreción:
+
+- Normal.
+- Discreto.
+- Muy discreto.
+
+Ejemplo normal:
+“Tu periodo podría comenzar pronto.”
+
+Ejemplo discreto:
+“Tienes una actualización en UVA.”
+
+Ejemplo muy discreto:
+“Recordatorio pendiente.”
+
+==================================================
+21. ESTADOS Y CASOS EXCEPCIONALES
+==================================================
+
+Diseña y programa estados para:
+
+- Carga inicial.
+- Skeletons.
+- Sin conexión.
+- Error de API.
+- Sesión expirada.
+- Micrófono denegado.
+- Notificaciones denegadas.
+- Sin productos.
+- Sin registros.
+- Ciclo irregular.
+- Datos insuficientes.
+- Rutina bloqueada.
+- Producto agotado.
+- WooCommerce no disponible.
+- Vera temporalmente no disponible.
+- Error de voz.
+- Cuenta temporal.
+- Confirmación de eliminación.
+- Confirmación de acciones sensibles.
+
+Todos los botones importantes deben funcionar, aunque utilicen datos simulados.
+
+No dejes botones sin acción.
+
+==================================================
+22. ACCESIBILIDAD
+==================================================
+
+Cumple buenas prácticas de accesibilidad:
+
+- Contraste AA.
+- Textos escalables.
+- Labels para lectores de pantalla.
+- Navegación mediante teclado en web.
+- Estados de foco visibles.
+- Áreas táctiles mínimas de 44 px.
+- No depender solamente del color.
+- Subtítulos para toda respuesta hablada.
+- Botón para detener audio.
+- Reduce motion.
+- Animaciones no obligatorias.
+- Mensajes de error claros.
+- Lenguaje simple.
+
+==================================================
+23. TONO Y MICROCOPY
+==================================================
+
+Todo el contenido debe estar en español.
+
+Mercado inicial:
+- Colombia.
+- Moneda COP.
+- Formato de fecha local.
+
+Tono de Vera:
+
+- Cercano.
+- Elegante.
+- Cálido.
+- Directo.
+- Respetuoso.
+- Sin infantilizar.
+- Sin juzgar.
+- Sin vulgaridad.
+- Sin afirmaciones médicas no verificadas.
+- Sin presión comercial.
+
+Ejemplos:
+
+“Estoy aquí para acompañarte. Puedes omitir cualquier pregunta.”
+
+“No necesitas tener productos UVA para utilizar la aplicación.”
+
+“Con la información que tengo, tu periodo podría comenzar entre el 18 y el 22.”
+
+“Primero revisemos cómo te sientes antes de continuar con la rutina.”
+
+“Te muestro este producto porque registraste una dificultad relacionada. Es completamente opcional.”
+
+No uses Lorem Ipsum.
+
+==================================================
+24. LÍMITES DE SALUD
+==================================================
+
+La aplicación no debe:
+
+- Diagnosticar.
+- Prescribir tratamientos.
+- Sustituir profesionales.
+- Predecir anticoncepción.
+- Confirmar fertilidad.
+- Inferir embarazo.
+- Recomendar Kegel automáticamente cuando existe dolor.
+- Afirmar que detecta contracciones.
+- Utilizar datos sensibles para anuncios externos.
+- Recomendar productos agotados.
+- Convertir cada conversación en una venta.
+
+Incluye componentes reutilizables para:
+
+- Advertencia.
+- Información educativa.
+- Señal para detener una rutina.
+- Recomendación de consulta profesional.
+- Contenido no disponible para una situación específica.
+
+==================================================
+25. PANEL ADMINISTRATIVO
+==================================================
+
+Después de completar el frontend principal, crea un panel administrativo web básico y separado, sin sacrificar la calidad de la app.
+
+Rutas o módulos:
+
+- Dashboard.
+- Usuarios.
+- Promociones.
+- Anuncios.
+- Productos.
+- Rutinas.
+- Contenidos.
+- Reglas de recomendación.
+- Notificaciones.
+- Analítica.
+- Configuración.
+
+Debe ser desktop-first y usar la misma identidad visual de UVA.
+
+Funciones simuladas:
+
+Usuarios:
+- Buscar.
+- Filtrar.
+- Ver estado.
+- Editar datos administrativos.
+- Desactivar.
+- Eliminar con confirmación.
+- No mostrar innecesariamente información sensible.
+
+Promociones:
+- Crear.
+- Editar.
+- Programar.
+- Segmentar.
+- URL interna o externa.
+- Activar o desactivar.
+
+Anuncios:
+- Título.
+- Imagen.
+- Descripción.
+- Fecha de inicio y fin.
+- Segmento.
+- Prioridad.
+- URL.
+- Vista previa.
+
+Rutinas:
+- Crear pasos.
+- Cambiar orden.
+- Definir duración.
+- Asociar clips de Vera.
+- Definir elegibilidad.
+- Publicar o dejar en borrador.
+
+No implementes lógica backend real.
+
+==================================================
+26. DATOS MOCK
+==================================================
+
+Crea suficientes datos para demostrar la experiencia.
+
+Incluye como mínimo:
+
+- Una usuaria llamada Laura.
+- Una usuaria invitada.
+- Tres ciclos menstruales de ejemplo.
+- Diferentes intensidades de flujo.
+- Síntomas.
+- Historial de check-ins.
+- Productos que la usuaria tiene.
+- Primera Copa al 40 %.
+- Rutina de piso pélvico activa.
+- Tres niveles de Bolas Kegel.
+- Conversaciones con Vera.
+- Productos UVA.
+- Productos agotados.
+- Promociones.
+- Anuncios.
+- Pedidos.
+- Notificaciones.
+
+Crea un selector de escenario de desarrollo para probar:
+
+- Usuaria nueva.
+- Usuaria sin productos.
+- Primera usuaria de copa.
+- Usuaria con Bolas Kegel.
+- Ciclo irregular.
+- Micrófono denegado.
+- Sin conexión.
+
+Este selector puede estar oculto tras una ruta o bandera de desarrollo.
+
+==================================================
+27. COMPONENTES REUTILIZABLES
+==================================================
+
+Crea, como mínimo:
+
+- AppHeader
+- BottomNavigation
+- VeraAvatar
+- VeraMessage
+- VoiceButton
+- VoiceStatus
+- CycleSummaryCard
+- DailyCheckIn
+- RoutineCard
+- RoutinePlayer
+- ProductCard
+- ProductRecommendation
+- PeriodCalendar
+- SymptomSelector
+- ProgressRing
+- RescueOption
+- PrivacyNotice
+- HealthWarning
+- EmptyState
+- ErrorState
+- LoadingSkeleton
+- AppButton
+- AppInput
+- AppModal
+- BottomSheet
+- NotificationCard
+- MemoryCard
+- WooCommerceWebView
+
+Usa tokens de diseño y evita estilos repetidos.
+
+==================================================
+28. ESTRUCTURA DEL PROYECTO
+==================================================
+
+Organiza el proyecto de forma clara.
+
+Ejemplo:
+
+app/
+  (auth)/
+  (onboarding)/
+  (tabs)/
+  routines/
+  first-cup/
+  rescue/
+  products/
+  profile/
+  settings/
+
+components/
+  ui/
+  vera/
+  calendar/
+  routines/
+  commerce/
+  privacy/
+
+services/
+  auth/
+  cycle/
+  vera/
+  voice/
+  products/
+  woocommerce/
+  personalization/
+
+stores/
+hooks/
+types/
+constants/
+mocks/
+assets/
+
+Incluye:
+
+- README.
+- Instrucciones de instalación.
+- Instrucciones de ejecución.
+- Variables de entorno.
+- Arquitectura resumida.
+- Lista de integraciones futuras.
+- Explicación para reemplazar el placeholder de Vera.
+- Explicación para reemplazar mocks por APIs reales.
+
+==================================================
+29. CRITERIOS DE ACEPTACIÓN
+==================================================
+
+La entrega se considera correcta cuando:
+
+1. El proyecto compila sin errores.
+2. No hay imports rotos.
+3. No hay botones principales sin funcionalidad.
+4. Todas las rutas principales son navegables.
+5. El onboarding puede completarse.
+6. La usuaria puede continuar sin productos UVA.
+7. El calendario permite registrar datos.
+8. El chat permite simular texto y voz.
+9. Primera Copa permite avanzar y guardar progreso.
+10. Modo Rescate funciona.
+11. Las rutinas pueden iniciarse, pausarse y finalizarse.
+12. Los niveles con Bolas Kegel respetan la elegibilidad.
+13. La tienda permite explorar productos.
+14. Comprar abre una vista web simulada de WooCommerce.
+15. La memoria de Vera puede consultarse y eliminarse.
+16. Existen estados de carga, vacío y error.
+17. El diseño funciona en móvil y web.
+18. El logo de UVA App está correctamente aplicado.
+19. El placeholder de Vera puede reemplazarse fácilmente.
+20. La aplicación mantiene una identidad premium, coherente y reconocible.
+21. No hay contenido diagnóstico ni afirmaciones médicas falsas.
+22. La interfaz no parece una tienda invasiva.
+23. La aplicación es accesible y usable.
+24. Los datos están tipados.
+25. Existe documentación para continuar el desarrollo.
+
+==================================================
+30. FORMA DE TRABAJO
+==================================================
+
+No me hagas preguntas antes de comenzar.
+
+Toma decisiones razonables cuando falte un detalle y documenta las suposiciones al final.
+
+Orden de ejecución:
+
+1. Analiza la ficha técnica.
+2. Analiza la identidad de UVA.
+3. Define tokens de diseño.
+4. Crea la estructura del proyecto.
+5. Construye el design system.
+6. Construye navegación.
+7. Construye onboarding.
+8. Construye las pantallas principales.
+9. Agrega estados y datos mock.
+10. Verifica responsive.
+11. Verifica accesibilidad.
+12. Corrige errores.
+13. Entrega el frontend ejecutable.
+14. Resume las decisiones tomadas.
+
+No te detengas después de generar una sola pantalla.
+
+No entregues solo una propuesta visual.
+
+Construye el flujo completo del frontend de UVA App.

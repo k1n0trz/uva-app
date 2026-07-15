@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "UVA App",
+    "slug": "uva-app",
+    "scheme": "uvaapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FCFAFB",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.uva.uvaapp"
+    },
+    "android": {
+      "package": "com.uva.uvaapp",
+      "adaptiveIcon": {
+        "backgroundColor": "#FCFAFB",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "static"
+    },
+    "experiments": {
+      "typedRoutes": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-web-browser",
+      "expo-font",
+      "expo-splash-screen",
+      "expo-secure-store"
+    ]
+  }
+}

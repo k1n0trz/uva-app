@@ -1,0 +1,55 @@
+# === Dependencias ===
+node_modules/
+**/node_modules/
+
+# === Expo / build ===
+.expo/
+**/.expo/
+dist/
+**/dist/
+web-build/
+**/web-build/
+expo-env.d.ts
+
+# === Native (generado) ===
+**/ios/
+**/android/
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# === Metro ===
+.metro-health-check*
+
+# === Logs / debug ===
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+
+# === Entorno / secretos ===
+.env
+.env.*
+!.env.example
+
+# === TypeScript ===
+*.tsbuildinfo
+
+# === Editor / SO ===
+.DS_Store
+.idea/
+.vscode/
+*.pem
+
+# === Artefactos de trabajo locales (no versionar el handoff descomprimido ni derivados) ===
+frontend/extracted/
+data/ficha_extracted.txt
+
+# === Assets pesados de Vera 3D ===
+# El .glb de 16MB no debería ir a git plano — usar Git LFS o almacenamiento aparte.
+# Descomenta la línea siguiente si prefieres excluirlo del repo por completo:
+# vera/*.glb
