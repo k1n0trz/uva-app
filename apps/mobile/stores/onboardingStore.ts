@@ -8,7 +8,7 @@ export type OnboardingAnswers = {
   lastPeriod: string;
   duration: string;
   products: string[];
-  veraStyle: string;
+  abrilStyle: string;
   reminders: string;
   routineTime: string;
 };
@@ -20,7 +20,7 @@ const EMPTY_ANSWERS: OnboardingAnswers = {
   lastPeriod: '',
   duration: '',
   products: [],
-  veraStyle: '',
+  abrilStyle: '',
   reminders: '',
   routineTime: '',
 };

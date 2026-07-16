@@ -3,7 +3,7 @@ import { AccessibilityInfo } from 'react-native';
 
 /**
  * Tracks the OS-level "reduce motion" accessibility setting so decorative
- * animations (Vera breathing, routine breathing guide, etc.) can be skipped
+ * animations (assistant breathing, routine breathing guide, etc.) can be skipped
  * per ficha técnica §22 / §20.5 ("reduce motion", "animaciones no obligatorias").
  */
 export function useReduceMotion() {

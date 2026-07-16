@@ -7,7 +7,7 @@ import { AppHeader } from './AppHeader';
 
 /**
  * Shared chrome for every tab (header + dev scenario switcher). In the
- * prototype this header persists across Hoy/Calendario/Vera/Rutinas/Tienda —
+ * prototype this header persists across Hoy/Calendario/Abril/Rutinas/Tienda —
  * only the content below it changes per tab.
  *
  * The dev scenario switcher renders *below* the header on purpose: the header

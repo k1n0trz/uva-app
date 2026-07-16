@@ -5,7 +5,7 @@ import { colors } from '../../constants/theme';
 const ICON_BY_ROUTE: Record<string, ImageSourcePropType> = {
   hoy: require('../../assets/nav/nav-hoy.png'),
   calendario: require('../../assets/nav/nav-calendario.png'),
-  vera: require('../../assets/nav/nav-vera.png'),
+  abril: require('../../assets/nav/nav-abril.png'),
   rutinas: require('../../assets/nav/nav-rutinas.png'),
   tienda: require('../../assets/nav/nav-tienda.png'),
 };
@@ -13,7 +13,7 @@ const ICON_BY_ROUTE: Record<string, ImageSourcePropType> = {
 const LABEL_BY_ROUTE: Record<string, string> = {
   hoy: 'Hoy',
   calendario: 'Calendario',
-  vera: 'Vera',
+  abril: 'Abril',
   rutinas: 'Rutinas',
   tienda: 'Tienda',
 };
@@ -28,7 +28,7 @@ type MinimalTabBarProps = {
   navigation: { navigate: (name: string) => void };
 };
 
-/** Custom tab bar: 5 tabs, Vera raised and larger — matches the prototype's bottom nav. */
+/** Custom tab bar: 5 tabs, the assistant raised and larger — matches the prototype's bottom nav. */
 export function BottomNavigation({ state, navigation }: MinimalTabBarProps) {
   const insets = useSafeAreaInsets();
   return (
@@ -38,7 +38,7 @@ export function BottomNavigation({ state, navigation }: MinimalTabBarProps) {
     >
       {state.routes.map((route) => {
         const isFocused = state.routes[state.index]?.key === route.key;
-        const isVera = route.name === 'vera';
+        const isAbril = route.name === 'abril';
         const icon = ICON_BY_ROUTE[route.name];
         const label = LABEL_BY_ROUTE[route.name] ?? route.name;
         if (!icon) return null;
@@ -51,15 +51,15 @@ export function BottomNavigation({ state, navigation }: MinimalTabBarProps) {
             accessibilityLabel={label}
             accessibilityState={{ selected: isFocused }}
             className="min-h-[44px] min-w-[44px] items-center justify-center gap-0.5"
-            style={isVera ? { marginTop: -14 } : undefined}
+            style={isAbril ? { marginTop: -14 } : undefined}
           >
             <Image
               source={icon}
               style={{
-                width: isVera ? 52 : 34,
-                height: isVera ? 52 : 34,
-                borderRadius: isVera ? 52 * 0.22 : 34 * 0.3,
-                opacity: isFocused || isVera ? 1 : 0.55,
+                width: isAbril ? 52 : 34,
+                height: isAbril ? 52 : 34,
+                borderRadius: isAbril ? 52 * 0.22 : 34 * 0.3,
+                opacity: isFocused || isAbril ? 1 : 0.55,
               }}
               resizeMode="cover"
             />

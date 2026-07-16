@@ -1,15 +1,18 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, Image, ImageSourcePropType, View } from 'react-native';
+import { ASSISTANT_NAME } from '../../constants/brand';
 import { colors } from '../../constants/theme';
 import { useBreatheScale } from '../../hooks/useBreatheScale';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 
 /**
- * Replaceable placeholder for Vera. Swap `source` for the real render/video
- * frame/Lottie/3D-exported clip per state once assets exist — the rest of the
- * app should keep working unchanged (see data/prompt-claude.txt section 4).
+ * Replaceable placeholder for the assistant. Swap `source` for the real render
+ * / video frame / Lottie / 3D-exported clip per state once assets exist — the
+ * rest of the app should keep working unchanged (see data/prompt-claude.txt
+ * section 4). UVA's 3D model is high-poly (~255k faces), so the beta should use
+ * pre-rendered clips rather than realtime rendering (ficha §20.3).
  */
-export type VeraState =
+export type AbrilState =
   | 'idle'
   | 'greeting'
   | 'listening'
@@ -21,16 +24,16 @@ export type VeraState =
   | 'unavailable';
 
 type Props = {
-  state?: VeraState;
+  state?: AbrilState;
   size?: number;
   /** Corner rounding as a percentage of size, matching the prototype's "organic squircle" (26-30%). */
   radiusPct?: number;
   source?: ImageSourcePropType;
 };
 
-const placeholderSource = require('../../assets/nav/nav-vera.png');
+const placeholderSource = require('../../assets/nav/nav-abril.png');
 
-const ringColorByState: Record<VeraState, string> = {
+const ringColorByState: Record<AbrilState, string> = {
   idle: colors.primaryBorder,
   greeting: colors.primaryBorder,
   listening: colors.primary,
@@ -42,7 +45,7 @@ const ringColorByState: Record<VeraState, string> = {
   unavailable: colors.border,
 };
 
-const motionByState: Record<VeraState, 'breathe' | 'pulse' | 'none'> = {
+const motionByState: Record<AbrilState, 'breathe' | 'pulse' | 'none'> = {
   idle: 'breathe',
   greeting: 'breathe',
   guiding: 'breathe',
@@ -54,7 +57,7 @@ const motionByState: Record<VeraState, 'breathe' | 'pulse' | 'none'> = {
   unavailable: 'none',
 };
 
-export function VeraAvatar({ state = 'idle', size = 64, radiusPct = 28, source }: Props) {
+export function AbrilAvatar({ state = 'idle', size = 64, radiusPct = 28, source }: Props) {
   const reduceMotion = useReduceMotion();
   const motion = reduceMotion ? 'none' : motionByState[state];
   const breathe = useBreatheScale(motion === 'breathe', 1700);
@@ -84,7 +87,7 @@ export function VeraAvatar({ state = 'idle', size = 64, radiusPct = 28, source }
   const imageOpacity = state === 'unavailable' ? 0.55 : 1;
 
   return (
-    <View style={{ width: size, height: size }} accessibilityRole="image" accessibilityLabel={`Vera — ${state}`}>
+    <View style={{ width: size, height: size }} accessibilityRole="image" accessibilityLabel={`${ASSISTANT_NAME} — ${state}`}>
       {motion === 'pulse' ? (
         <Animated.View
           pointerEvents="none"

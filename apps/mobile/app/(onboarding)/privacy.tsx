@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppButton, Checkbox } from '../../components/ui';
+import { ASSISTANT_NAME } from '../../constants/brand';
 import { useOnboardingStore } from '../../stores/onboardingStore';
 
 /**
@@ -24,8 +25,8 @@ export default function OnboardingPrivacy() {
       <View className="gap-4">
         <Text className="font-extrabold text-xl text-ink">Tu privacidad primero</Text>
         <Text className="font-medium text-sm leading-6 text-ink-secondary">
-          Usamos tus datos únicamente para acompañarte mejor. Puedes revisar, corregir o eliminar lo que Vera recuerda
-          cuando quieras.
+          Usamos tus datos únicamente para acompañarte mejor. Puedes revisar, corregir o eliminar lo que {ASSISTANT_NAME}{' '}
+          recuerda cuando quieras.
         </Text>
         <Checkbox
           checked={consentGeneral}

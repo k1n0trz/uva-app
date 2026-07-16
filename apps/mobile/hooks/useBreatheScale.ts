@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
-/** Shared "breathe" loop (scale 1 -> 1.06 -> 1) used by the logo, VeraAvatar, etc. */
+/** Shared "breathe" loop (scale 1 -> 1.06 -> 1) used by the logo, AbrilAvatar, etc. */
 export function useBreatheScale(active: boolean, duration = 1700) {
   const scale = useRef(new Animated.Value(1)).current;
 

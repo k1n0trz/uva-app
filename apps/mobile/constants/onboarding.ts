@@ -1,10 +1,11 @@
 /**
  * Conversational onboarding questions.
  * Source of truth: design-handoff prototype OB_QUESTIONS (UVA App.dc.html) +
- * ficha técnica §8.3 (preguntas iniciales de Vera) and §8.4 (catálogo de
+ * ficha técnica §8.3 (preguntas iniciales de la asistente) and §8.4 (catálogo de
  * productos). Order and copy match the prototype so the built flow stays
  * pixel/word-faithful.
  */
+import { ASSISTANT_NAME } from './brand';
 
 export type OnboardingQuestionType = 'input' | 'chips' | 'products' | 'summary';
 
@@ -50,8 +51,8 @@ export const OB_QUESTIONS: OnboardingQuestion[] = [
   },
   { key: 'products', q: '¿Qué productos UVA tienes actualmente?', type: 'products' },
   {
-    key: 'veraStyle',
-    q: '¿Cómo prefieres que Vera te responda?',
+    key: 'abrilStyle',
+    q: `¿Cómo prefieres que ${ASSISTANT_NAME} te responda?`,
     type: 'chips',
     options: ['Breve', 'Paso a paso', 'Cercana', 'Más técnica'],
     optional: true,
@@ -95,7 +96,7 @@ export const OB_SUMMARY_LABELS: Record<string, string> = {
   lastPeriod: 'Último periodo',
   duration: 'Duración',
   products: 'Tus productos UVA',
-  veraStyle: 'Estilo de Vera',
+  abrilStyle: `Estilo de ${ASSISTANT_NAME}`,
   reminders: 'Recordatorios',
   routineTime: 'Momento de rutinas',
 };

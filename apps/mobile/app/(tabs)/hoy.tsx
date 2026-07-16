@@ -5,10 +5,12 @@ import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { DailyCheckIn } from '../../components/cycle/DailyCheckIn';
 import { TabScreenShell } from '../../components/nav';
 import { AppButton, LoadingSkeleton, ProgressRing } from '../../components/ui';
-import { VeraAvatar } from '../../components/vera';
+import { AbrilAvatar } from '../../components/abril';
+import { ASSISTANT_NAME } from '../../constants/brand';
 import { todayIso } from '../../lib/date';
 import { mockCycleService } from '../../services/cycle';
 import { useCheckinStore, isEmptyCheckIn, isPartialCheckIn } from '../../stores/checkinStore';
+import { useFirstCupStore } from '../../stores/firstCupStore';
 import { useScenarioFlags } from '../../stores/scenarioStore';
 
 const comingSoon = (phase: string) => () =>
@@ -48,8 +50,8 @@ export default function HoyScreen() {
     setCheckinOpen(true);
   };
 
-  // First Cup progress is mock for now; the real value arrives with Fase 4.
-  const cupPercent = 40;
+  const cupStages = useFirstCupStore((s) => s.stages);
+  const cupPercent = Math.round((cupStages.filter((s) => s.done).length / cupStages.length) * 100);
 
   return (
     <TabScreenShell>
@@ -62,18 +64,18 @@ export default function HoyScreen() {
       ) : null}
 
       <Pressable
-        onPress={() => router.push('/(tabs)/vera')}
+        onPress={() => router.push('/(tabs)/abril')}
         accessibilityRole="button"
         className="flex-row items-center gap-3.5 rounded-3xl border border-primary-border bg-primary-xsoft p-5"
       >
-        <VeraAvatar state="idle" size={56} radiusPct={26} />
+        <AbrilAvatar state="idle" size={56} radiusPct={26} />
         <View className="flex-1">
           <Text className="font-bold text-sm text-ink">
             {micDenied
-              ? 'Vera está lista para escucharte por texto.'
+              ? `${ASSISTANT_NAME} está lista para escucharte por texto.`
               : 'Te preparé una rutina de respiración de 3 minutos.'}
           </Text>
-          <Text className="mt-1 font-semibold text-xs text-primary-dark">Hablar con Vera →</Text>
+          <Text className="mt-1 font-semibold text-xs text-primary-dark">Hablar con {ASSISTANT_NAME} →</Text>
         </View>
       </Pressable>
 
@@ -128,7 +130,7 @@ export default function HoyScreen() {
 
       {hasCup ? (
         <Pressable
-          onPress={comingSoon('la Fase 4 (Modo Primera Copa)')}
+          onPress={() => router.push('/first-cup')}
           accessibilityRole="button"
           className="flex-row items-center gap-3.5 rounded-3xl border border-border bg-white p-[18px]"
         >
@@ -180,11 +182,7 @@ export default function HoyScreen() {
         </View>
       ) : null}
 
-      <AppButton
-        label="Necesito ayuda ahora"
-        variant="danger-outline"
-        onPress={comingSoon('la Fase 4 (Modo Rescate)')}
-      />
+      <AppButton label="Necesito ayuda ahora" variant="danger-outline" onPress={() => router.push('/rescue')} />
 
       <DailyCheckIn
         visible={checkinOpen}

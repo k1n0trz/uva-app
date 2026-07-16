@@ -4,6 +4,8 @@
 >
 > Orden de prioridad para resolver contradicciones (definido en el propio brief): 1) decisiones de `prompt-claude.txt`, 2) ficha funcional y técnica, 3) identidad/logo UVA, 4) copauva.com.
 
+> ⚠️ **Nombre de la asistente: "Vera" → "Abril"** (decisión de UVA, 16 jul 2026). El prototipo, el brief y la ficha dicen "Vera"; el código y la app dicen **Abril**. El nombre sigue siendo **provisional** mientras UVA completa la búsqueda marcaria (ficha §33). Por eso el nombre visible está centralizado en [`constants/brand.ts`](apps/mobile/constants/brand.ts) (`ASSISTANT_NAME`) — un cambio futuro es una sola línea. Al leer los documentos fuente, "Vera" = "Abril".
+
 ## Cómo leer este documento
 
 Cada tarea tiene un dueño:
@@ -24,7 +26,7 @@ El frontend (`UVA App.dc.html`) es la fuente de verdad visual: hay que reproduci
 - Comercio: **WooCommerce REST API** (credenciales solo en backend) + **Mercado Pago** vía checkout de WooCommerce.
 - Monorepo sugerido (Turborepo/Nx) para compartir tipos entre app, admin y backend.
 
-> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1, 2 y 3 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
+> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1, 2, 3 y 4 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
 >
 > **Cómo correr la app** — Web: `cd apps/mobile && npx expo export --platform web` (o `npx expo start --web`). Nativo (Android, con teléfono en modo desarrollador por USB): `cd apps/mobile && npx expo start`, luego escanear el QR con Expo Go, o `adb reverse tcp:8081 tcp:8081` + abrir `exp://127.0.0.1:8081` en Expo Go.
 
@@ -56,9 +58,9 @@ Reproducir del prototipo: paleta (`#CD2F62` primary, `#9E234C` dark, `#FBE8EF`/`
 | # | Tarea | Dueño | Estado |
 |---|---|---|---|
 | 1.1 | Librería de componentes base: `AppButton`, `AppInput`, `AppModal`, `BottomSheet`, `EmptyState`, `ErrorState`, `LoadingSkeleton`, `HealthWarning`, `PrivacyNotice` | ⚪ Claude | ✅ `components/ui/` |
-| 1.2 | `AppHeader` + `BottomNavigation` (5 tabs: Hoy, Calendario, Vera centrada y más grande, Rutinas, Tienda) — igual al patrón visto en `tabs` del prototipo | ⚪ Claude | ✅ `components/nav/` + `app/(tabs)/` |
-| 1.3 | Componente `VeraAvatar` reemplazable con estados: idle, greeting, listening, thinking, speaking, guiding, celebrating, concerned, unavailable — placeholder orgánico/silueta (nunca stock ni infantil) | ⚪ Claude | ✅ `components/vera/VeraAvatar.tsx` |
-| 1.4 | Setup de mocks: capa de servicios desacoplados (`authService`, `cycleService`, `veraChatService`, `speechToTextService`, `textToSpeechService`, `routinesService`, `productsService`, `wooCommerceService`, `personalizationService`, `userMemoryService`, `recommendationService`, `notificationsService`) — todas simuladas, sin claves reales | ⚪ Claude | ✅ `services/*` (contratos + mocks; datos completos llegan por fase) |
+| 1.2 | `AppHeader` + `BottomNavigation` (5 tabs: Hoy, Calendario, Abril centrada y más grande, Rutinas, Tienda) — igual al patrón visto en `tabs` del prototipo | ⚪ Claude | ✅ `components/nav/` + `app/(tabs)/` |
+| 1.3 | Componente `AbrilAvatar` reemplazable con estados: idle, greeting, listening, thinking, speaking, guiding, celebrating, concerned, unavailable — placeholder orgánico/silueta (nunca stock ni infantil) | ⚪ Claude | ✅ `components/abril/AbrilAvatar.tsx` |
+| 1.4 | Setup de mocks: capa de servicios desacoplados (`authService`, `cycleService`, `abrilChatService`, `speechToTextService`, `textToSpeechService`, `routinesService`, `productsService`, `wooCommerceService`, `personalizationService`, `userMemoryService`, `recommendationService`, `notificationsService`) — todas simuladas, sin claves reales | ⚪ Claude | ✅ `services/*` (contratos + mocks; datos completos llegan por fase) |
 | 1.5 | Selector de escenario de desarrollo (igual al `<select>` de escenarios del prototipo): Laura/demo completa, usuaria nueva, sin productos, primera copa, con Kegel, ciclo irregular, mic denegado, sin conexión | ⚪ Claude | ✅ `stores/scenarioStore.ts` + `components/dev/ScenarioSwitcher.tsx` (gated tras `__DEV__`) |
 
 **Extra de Fase 1** (no listado originalmente, agregado por necesidad): experiencia web centrada tipo app (max-width 480px, sin estirar en pantallas anchas) en `app/_layout.tsx`, según brief §5.
@@ -102,14 +104,20 @@ Pantallas del prototipo: splash → intro Vera (voz/texto) → onboarding conver
 
 ---
 
-## Fase 4 — Vera (chat), Modo Rescate, Modo Primera Copa (mock)
+## Fase 4 — Abril (chat), Modo Rescate, Modo Primera Copa (mock)
 
-| # | Tarea | Dueño |
-|---|---|---|
-| 4.1 | Chat con Vera: burbujas, quick replies, pulsar-para-hablar, transcripción editable, detener voz, estados (escuchando/procesando/pensando/hablando/error mic/sin conexión/timeout) | ⚪ Claude |
-| 4.2 | Modo Rescate: 10 situaciones (copa no abre, filtraciones, no retira, no sabe si está bien puesta, manchado, cólicos, olvidó limpiar, no sabe qué usar, dolor, otro) + advertencia de "consulta profesional" cuando aplique | ⚪ Claude |
-| 4.3 | Modo Primera Copa: 14 etapas, progreso, expandir/colapsar, "lo logré"/"necesito ayuda" (deriva a Rescate), evaluación final | ⚪ Claude |
-| 4.4 | Personalización por producto declarado (no extrapolar instrucciones de una copa a otra sin validar — ficha §13.3) | ⚪ Claude (UI condicional) + 🔵 Codex (reglas) |
+| # | Tarea | Dueño | Estado |
+|---|---|---|---|
+| 4.1 | Chat con Abril: burbujas, quick replies, pulsar-para-hablar, transcripción editable, detener voz, estados (escuchando/procesando/pensando/hablando/error mic/sin conexión) | ⚪ Claude | ✅ `app/(tabs)/abril.tsx` + `stores/chatStore.ts`. Incluye calificar respuesta, "explícame de otra forma" y respuesta breve/detallada |
+| 4.2 | Modo Rescate: 10 situaciones + advertencia de "consulta profesional" cuando aplique | ⚪ Claude | ✅ `app/rescue.tsx` + `constants/rescue.ts`. Sin promos, sin tienda, sin selector de escenarios (verificado) |
+| 4.3 | Modo Primera Copa: 14 etapas, progreso, expandir/colapsar, "lo logré"/"necesito ayuda" (deriva a Rescate) | ⚪ Claude | ✅ `app/first-cup.tsx` + `stores/firstCupStore.ts`. Progreso real compartido con la tarjeta de Hoy |
+| 4.4 | Personalización por producto declarado (no extrapolar instrucciones de una copa a otra sin validar — ficha §13.3) | ⚪ Claude (UI condicional) + 🔵 Codex (reglas) | ⚪ Pendiente: requiere que UVA valide el contenido por modelo/talla |
+
+**Notas de Fase 4:**
+- ⚠️ **El contenido de Rescate y Primera Copa está marcado en el código como PENDIENTE DE VALIDACIÓN CLÍNICA** (`constants/rescue.ts`, `constants/firstCup.ts`). La ficha §25.4 exige aprobación profesional antes de producción. Son placeholders redactados con el tono correcto, no guía médica final.
+- La voz es **pulsar-para-hablar**, nunca escucha permanente ni palabra de activación (ficha §4.2/§11.2). La transcripción se muestra **editable y solo se envía al confirmar**.
+- La evaluación final de Primera Copa (etapa 12 "Evaluación de la experiencia") existe como etapa; el formulario de autoevaluación estructurado se comparte con el de rutinas en la Fase 5.
+- Segundo hueco de accesibilidad de RN-web encontrado al verificar: `accessibilityValue` no mapea a `aria-valuenow`. Resuelto con helpers en `lib/a11y.ts` (aplicado a `Checkbox` y a los dos progressbars).
 | 4.5 | **Backend/IA real — flujo completo de voz**: mic → STT → clasificación de intención → extracción estructurada → motor de reglas de seguridad → contexto (perfil+memoria+biblioteca UVA validada) → LLM (DeepSeek u otro) → filtro de salida → texto/voz (ficha §11.1, §19.1) | 🔵 Codex |
 | 4.6 | Motor de reglas: elegibilidad, alertas, contraindicaciones, límites (nunca diagnostica, nunca promete anticoncepción/fertilidad, detiene ante dolor) | 🔵 Codex |
 | 4.7 | Capa de abstracción de proveedores LLM/STT/TTS (reemplazable sin reescribir app; registrar costo/latencia/calidad por proveedor) | 🔵 Codex |
@@ -175,11 +183,11 @@ Pantallas del prototipo: splash → intro Vera (voz/texto) → onboarding conver
 
 | # | Tarea | Dueño |
 |---|---|---|
-| 9.1 | Revisar el modelo ya generado (`vera/Meshy_AI_Pink_Serenity_Nurse_0715202320_texture.glb`) contra el brief: adulta estilizada, cálida, sofisticada, sin apariencia médica/infantil/sexualizada — ajustar dirección si el nombre/skin actual ("Nurse") no calza con "acompañamiento, no enfermedad" | 🟣 UVA |
+| 9.1 | ✅ Dirección del modelo 3D **confirmada por UVA** (16 jul 2026): el "Nurse" del nombre del archivo es solo el prompt de Meshy; el render es una acompañante cálida y estilizada, sin uniforme clínico. Sirve como base. | 🟣 UVA |
 | 9.2 | Corrección de topología, rigging, materiales y expresiones en Blender | 🟣 UVA (o proveedor externo que definan) |
 | 9.3 | Crear clips por estado: bienvenida, escuchando, procesando, hablando, explicando paso a paso, guiando respiración, celebración discreta, preocupación/alerta, espera/error | 🟣 UVA |
-| 9.4 | Exportar optimizado (GLB/FBX) + versiones pre-renderizadas (recomendación: **no** renderizar 3D complejo en tiempo real en todos los dispositivos para la beta) | 🟣 UVA |
-| 9.5 | Integrar clips en `VeraAvatar` con fallback estático, carga diferida y caché | ⚪ Claude |
+| 9.4 | Exportar optimizado (GLB/FBX) + versiones pre-renderizadas. **Dato medido:** el modelo actual tiene ~255.318 caras / 134.982 vértices — demasiado para render en tiempo real en gama media/baja, lo que confirma la recomendación de la ficha §20.3 de usar clips pre-renderizados en la beta | 🟣 UVA |
+| 9.5 | Integrar clips en `AbrilAvatar` con fallback estático, carga diferida y caché | ⚪ Claude |
 | 9.6 | Modo bajo consumo (imagen estática) y "reducir movimiento" | ⚪ Claude |
 
 ---
@@ -254,7 +262,7 @@ Estas son las que la propia ficha marca como pendientes (§33) — las dejo aqu�
 ## Orden recomendado de arranque inmediato
 
 1. 🟣 UVA cierra Fase 0 (naming, mercado, accesos sociales reales, proveedor de voz, credenciales de prueba).
-2. ⚪ Claude arranca en paralelo: monorepo + design tokens + shell de navegación + `VeraAvatar` placeholder (Fase 1), sin esperar al backend.
+2. ⚪ Claude arranca en paralelo: monorepo + design tokens + shell de navegación + `AbrilAvatar` placeholder (Fase 1), sin esperar al backend.
 3. 🔵 Codex arranca en paralelo: modelo de datos (0.9) y contratos de API (0.10), para que cuando el frontend mock esté listo, conectar sea un simple swap de `services/*` por clientes reales.
 4. Frontend mock completo (Fases 2–8) es el hito de "app ejecutable, navegable, sin backend real" que pide el brief original.
 5. Backend + IA (Codex) se conectan fase por fase, reemplazando cada mock service sin tocar UI.

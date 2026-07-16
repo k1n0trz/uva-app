@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { colors } from '../../constants/theme';
+import { webAriaProgress } from '../../lib/a11y';
 
 type Props = {
   /** 0–100 */
@@ -26,6 +27,7 @@ export function ProgressRing({ percent, size = 52, strokeWidth = 6, label }: Pro
       accessibilityRole="progressbar"
       accessibilityValue={{ now: Math.round(clamped), min: 0, max: 100 }}
       accessibilityLabel={label}
+      {...webAriaProgress(clamped)}
     >
       <Svg width={size} height={size} style={{ position: 'absolute' }}>
         <Circle cx={center} cy={center} r={radius} stroke={colors.border} strokeWidth={strokeWidth} fill="none" />

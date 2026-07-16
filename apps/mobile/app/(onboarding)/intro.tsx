@@ -2,10 +2,11 @@ import { router } from 'expo-router';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppButton } from '../../components/ui';
-import { VeraAvatar } from '../../components/vera';
+import { AbrilAvatar } from '../../components/abril';
+import { ASSISTANT_NAME } from '../../constants/brand';
 import { useOnboardingStore } from '../../stores/onboardingStore';
 
-/** "Hola, soy Vera" — matches the prototype's isOnboardIntro screen. */
+/** "Hola, soy Abril" — matches the prototype's isOnboardIntro screen. */
 export default function OnboardingIntro() {
   const insets = useSafeAreaInsets();
   const setVoiceOn = useOnboardingStore((s) => s.setVoiceOn);
@@ -25,9 +26,9 @@ export default function OnboardingIntro() {
       <View />
 
       <View className="items-center gap-[18px]">
-        <VeraAvatar state="greeting" size={132} radiusPct={30} />
+        <AbrilAvatar state="greeting" size={132} radiusPct={30} />
         <View className="items-center">
-          <Text className="font-extrabold text-xl text-ink">Hola, soy Vera</Text>
+          <Text className="font-extrabold text-xl text-ink">Hola, soy {ASSISTANT_NAME}</Text>
           <Text className="mt-2.5 max-w-[280px] text-center font-medium text-sm leading-6 text-ink-secondary">
             Estoy aquí para acompañarte. No solo te digo cuándo llega tu periodo — te ayudo a prepararte, cuidarte y
             entender qué funciona para ti.
@@ -36,7 +37,7 @@ export default function OnboardingIntro() {
       </View>
 
       <View className="gap-2.5">
-        <AppButton label="Hablar con Vera" fullWidth onPress={() => start(true)} />
+        <AppButton label={`Hablar con ${ASSISTANT_NAME}`} fullWidth onPress={() => start(true)} />
         <AppButton label="Prefiero escribir" variant="secondary" fullWidth onPress={() => start(false)} />
       </View>
     </View>

@@ -1,4 +1,5 @@
-import { Platform, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import { webAriaChecked } from '../../lib/a11y';
 
 type Props = {
   checked: boolean;
@@ -7,11 +8,8 @@ type Props = {
 };
 
 /** Custom checkbox (RN has no native one). Whole row is tappable (>=44px).
- *  On web we also emit `aria-checked` directly — RN-web 0.21 doesn't reliably
- *  map accessibilityState.checked to it, and screen-reader support is required
- *  (brief §22). Guarded to web so native isn't handed an unknown prop. */
+ *  `webAriaChecked` covers an RN-web gap — see lib/a11y.ts. */
 export function Checkbox({ checked, onToggle, label }: Props) {
-  const webAria = Platform.OS === 'web' ? ({ 'aria-checked': checked } as Record<string, unknown>) : {};
   return (
     <Pressable
       onPress={onToggle}
@@ -19,7 +17,7 @@ export function Checkbox({ checked, onToggle, label }: Props) {
       accessibilityState={{ checked }}
       accessibilityLabel={label}
       className="flex-row items-start gap-2.5 rounded-2xl border border-border bg-white p-3.5"
-      {...webAria}
+      {...webAriaChecked(checked)}
     >
       <View
         className={[

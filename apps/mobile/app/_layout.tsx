@@ -48,6 +48,8 @@ export default function RootLayout() {
               <Stack.Screen name="(onboarding)" />
               <Stack.Screen name="(auth)" />
               <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="rescue" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="first-cup" options={{ presentation: 'modal' }} />
             </Stack>
           </View>
         </View>

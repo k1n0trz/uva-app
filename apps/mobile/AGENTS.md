@@ -10,6 +10,13 @@ latest SDK's APIs.
 
 If you bump the SDK, Expo Go on device must support it or native testing breaks.
 
+## The assistant is called "Abril"
+
+The design prototype and the ficha técnica call her **Vera**; UVA renamed her to
+**Abril** (16 jul 2026). The name is still provisional pending a trademark check,
+so every user-facing mention goes through `ASSISTANT_NAME` in `constants/brand.ts`.
+Don't hardcode the name in copy. When reading the source docs, Vera = Abril.
+
 ## Design source of truth
 
 The approved design lives in the handoff prototype at
@@ -37,8 +44,9 @@ preferences:
 - `react-native-web` keeps a closed `<Modal visible={false}>` mounted, leaving its
   controls in the a11y tree and tab order. `BottomSheet`/`AppModal` return `null`
   when closed for this reason — don't "simplify" that away.
-- `accessibilityState={{ checked }}` doesn't map to `aria-checked` on RN-web 0.21;
-  `Checkbox` passes `aria-checked` explicitly on web.
+- RN-web 0.21 doesn't map `accessibilityState`/`accessibilityValue` onto ARIA
+  attributes (`aria-checked`, `aria-valuenow`…). Use the helpers in `lib/a11y.ts`
+  alongside the RN props whenever you set a checkbox/radio/progressbar role.
 - No CSS `conic-gradient` in RN — use `ProgressRing` (SVG).
 - Dev-only UI must be gated behind `__DEV__` (see `ScenarioSwitcher`), which is
   false in `expo export` production builds.
