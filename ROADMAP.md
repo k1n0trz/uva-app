@@ -20,13 +20,13 @@ El frontend (`UVA App.dc.html`) es la fuente de verdad visual: hay que reproduci
 
 **Stack objetivo** (combinando el brief y la ficha técnica, sección 30):
 - App consumidor: **Expo Router + React Native + React Native Web** (Expo **SDK 54**, alineado con la versión de Expo Go disponible en Play Store para permitir testing nativo en dispositivo), TypeScript estricto, NativeWind, Zustand, TanStack Query, React Hook Form.
-- Web admin: **Next.js** (separado, desktop-first), misma identidad visual.
+- Web admin: **Next.js 16** (separado, desktop-first), misma identidad visual — vive en `apps/admin`.
 - Backend: **NestJS + TypeScript**, **PostgreSQL** (+ pgvector para memoria/personalización), **Redis** (cache/colas/sesión), almacenamiento compatible S3.
 - IA: capa de proveedores abstraída para **LLM (DeepSeek V4 Pro candidato)**, **STT** y **TTS** independientes — reemplazables sin tocar la app.
 - Comercio: **WooCommerce REST API** (credenciales solo en backend) + **Mercado Pago** vía checkout de WooCommerce.
 - Monorepo sugerido (Turborepo/Nx) para compartir tipos entre app, admin y backend.
 
-> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1 a 7 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
+> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1 a 8 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
 >
 > **Cómo correr la app** — Web: `cd apps/mobile && npx expo export --platform web` (o `npx expo start --web`). Nativo (Android, con teléfono en modo desarrollador por USB): `cd apps/mobile && npx expo start`, luego escanear el QR con Expo Go, o `adb reverse tcp:8081 tcp:8081` + abrir `exp://127.0.0.1:8081` en Expo Go.
 
@@ -188,16 +188,25 @@ Pantallas del prototipo: splash → intro Vera (voz/texto) → onboarding conver
 
 ## Fase 8 — Panel administrativo (Next.js, desktop-first)
 
-| # | Tarea | Dueño |
-|---|---|---|
-| 8.1 | Shell admin: sidebar (Dashboard, Usuarios, Promociones, Anuncios, Rutinas, Configuración) + identidad UVA | ⚪ Claude |
-| 8.2 | Dashboard: stats (usuarias activas, onboardings, conversaciones Vera, pedidos referidos) + actividad reciente | ⚪ Claude |
-| 8.3 | Usuarios: buscar/filtrar, ver estado, editar datos administrativos, activar/desactivar, eliminar con confirmación — **sin exponer registros de salud íntimos** | ⚪ Claude (UI) + 🔵 Codex (permisos/roles) |
-| 8.4 | Promociones: crear/editar/programar/segmentar/URL interna-externa/activar-desactivar | ⚪ Claude (UI) + 🔵 Codex (CRUD + reglas de segmento) |
-| 8.5 | Anuncios: título/imagen/fechas/segmento/prioridad/URL/preview — **nunca interrumpir Modo Rescate ni conversaciones sensibles** | ⚪ Claude |
-| 8.6 | Módulo rutinas (admin): crear pasos, orden, duración, clips de Vera asociados, elegibilidad, publicar/borrador | ⚪ Claude (UI) + 🔵 Codex (backend) |
-| 8.7 | **Roles y permisos reales**: superadmin, contenido, comercial, soporte, analítica, clínico/editor experto — con auditoría de quién cambió qué y cuándo (ficha §22) | 🔵 Codex |
-| 8.8 | Definir quién ocupa cada rol y flujo de aprobación de contenido sensible | 🟣 UVA |
+El panel vive en [`apps/admin`](apps/admin) — **Next.js 16 (App Router) + Tailwind v4**, desktop-first. Correr: `cd apps/admin && npm run dev` (o `npm run build && npx next start`).
+
+| # | Tarea | Dueño | Estado |
+|---|---|---|---|
+| 8.1 | Shell admin: sidebar (Dashboard, Usuarios, Promociones, Anuncios, Rutinas, Configuración) + identidad UVA | ⚪ Claude | ✅ `components/AdminShell.tsx` |
+| 8.2 | Dashboard: stats + actividad reciente | ⚪ Claude | ✅ `app/page.tsx` |
+| 8.3 | Usuarios: buscar/filtrar, ver estado, activar/desactivar, eliminar con confirmación — **sin exponer registros de salud íntimos** | ⚪ Claude (UI) + 🔵 Codex (permisos/roles) | ✅ `app/usuarios/page.tsx` — verificado: 0 términos de salud en la pantalla |
+| 8.4 | Promociones: crear/editar/programar/segmentar/URL interna-externa/activar-desactivar | ⚪ Claude (UI) + 🔵 Codex (CRUD + reglas de segmento) | ✅ `app/promociones/page.tsx` |
+| 8.5 | Anuncios: título/imagen/fechas/segmento/prioridad/URL/preview — **nunca interrumpir Modo Rescate ni conversaciones sensibles** | ⚪ Claude | ✅ `app/anuncios/page.tsx` con vista previa en vivo |
+| 8.6 | Módulo rutinas (admin): crear pasos, orden, duración, clips de Abril asociados, elegibilidad, publicar/borrador | ⚪ Claude (UI) + 🔵 Codex (backend) | ✅ `app/rutinas/page.tsx` (los clips se asocian cuando existan — Fase 9) |
+| 8.7 | **Roles y permisos reales**: superadmin, contenido, comercial, soporte, analítica, clínico/editor experto — con auditoría de quién cambió qué y cuándo (ficha §22) | 🔵 Codex | Listado en `/configuracion` con su dueño |
+| 8.8 | Definir quién ocupa cada rol y flujo de aprobación de contenido sensible | 🟣 UVA | 🔴 Pendiente |
+
+**Notas de Fase 8:**
+- 🎨 **Los tokens de diseño ahora son compartidos de verdad:** [`packages/tokens/colors.js`](packages/tokens/colors.js) lo leen **ambas** apps (el `tailwind.config.js` de móvil y, vía `@config`, el de admin). Con dos apps, duplicar la paleta era garantía de desincronización. Verificado: el panel renderiza exactamente los mismos hex.
+- 🔒 **La restricción §22.3 es visible en la propia pantalla.** Usuarios muestra solo datos administrativos — ni ciclo, ni síntomas, ni conversaciones — y lo dice en un aviso. Está escrito ahí a propósito: es lo que hace que la regla sobreviva al primer *"¿y no podemos ver qué síntomas reportó?"*. Incluso "Productos" es un **conteo**, no la lista.
+- Las reglas que la app aplica se **declaran** en el panel en vez de ofrecerse como opciones: la elegibilidad de Kegel no se edita, y los anuncios no pueden habilitarse dentro de Modo Rescate.
+- Validaciones que evitan errores silenciosos: fechas invertidas bloquean el guardado y explican por qué; eliminar una cuenta exige escribir `ELIMINAR`.
+- `/configuracion` está casi vacía **a propósito**: lo real (roles, auditoría, integraciones) depende del backend, y un panel lleno de switches que no hacen nada es peor que un hueco honesto. Lista qué falta y de quién depende.
 
 ---
 

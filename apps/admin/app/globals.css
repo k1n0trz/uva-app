@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+/* Loads the shared UVA tokens (packages/tokens/colors.js) so the admin and the
+   mobile app can never drift apart. Tailwind v4 keeps @config for exactly this. */
+@config '../tailwind.config.js';
+
+/* The admin is a tool for the UVA team, not a consumer surface: it stays in the
+   brand's light palette and does not follow the OS dark mode. */
+html,
+body {
+  background: #f4edef;
+  color: #282326;
+  -webkit-font-smoothing: antialiased;
+}
