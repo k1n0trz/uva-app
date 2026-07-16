@@ -160,7 +160,10 @@ Pantallas del prototipo: splash → intro Vera (voz/texto) → onboarding conver
 | 6.8 | Confirmar con el equipo de e-commerce si se comparte identidad de cuenta o se vincula por correo/token entre app y WooCommerce (ficha §33, decisión pendiente) | 🟣 UVA | 🔴 Pendiente |
 
 **Notas de Fase 6:**
-- ⚠️ **Precios, stock, ratings e imágenes del catálogo son placeholders inventados.** Los nombres sí son los reales (ficha §8.4), pero los valores vienen del sync de WooCommerce (§17.1). **No citar estos precios a nadie.**
+- ✅ **El catálogo ahora es REAL.** Se trae del WooCommerce de copauva.com con [`scripts/fetch-catalog.mjs`](apps/mobile/scripts/fetch-catalog.mjs): 35 productos con nombres, precios, imágenes, stock, rating y `permalink` reales.
+- ⚠️ **Pero es una FOTO, no datos en vivo.** Precios y stock cambian en la tienda y el archivo no se entera. **Re-generar antes de cualquier demo donde los precios importen.** Cuando exista el backend (6.4), la app debe pedirle el catálogo a él y este archivo se borra.
+- 🔒 **Por qué el rodeo del script:** las credenciales de WooCommerce **no pueden vivir en la app**. Todo lo que va en un bundle de Expo es legible por cualquiera con el APK, y esas llaves **escriben** en la tienda (ficha §17.1/§24.1). Por eso se llama a Woo en tiempo de desarrollo y se commitean solo los datos. Las credenciales nunca entraron al repo (auditado).
+- El estado "producto descontinuado" (ficha §16.1) **no está implementado**: WooCommerce no tiene ese concepto — un producto retirado simplemente se despublica. Necesita una señal real de UVA (una etiqueta en Woo o un campo del backend), no una suposición nuestra.
 - La app **no** finge personalizar: cuando no hay una razón real, la ficha del producto dice literalmente *"Es parte del catálogo de UVA. No lo estoy recomendando para ti en particular"* (ficha §18.4).
 - `.env.example` creado (pendiente desde Fase 0), con la regla explícita de que `EXPO_PUBLIC_*` queda visible en el bundle y las credenciales viven solo en backend.
 

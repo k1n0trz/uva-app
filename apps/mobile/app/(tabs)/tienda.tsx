@@ -6,7 +6,7 @@ import { ProductCard } from '../../components/commerce/ProductCard';
 import { ProductSheet } from '../../components/commerce/ProductSheet';
 import { TabScreenShell } from '../../components/nav';
 import { AppButton, EmptyState } from '../../components/ui';
-import { PRODUCTS, SHOP_SECTIONS, type Product } from '../../constants/products';
+import { PRODUCTS, SHOP_SECTIONS, inSection, type Product, type ShopSection } from '../../constants/products';
 import { isRecommendable } from '../../lib/commerce';
 import { mockWooCommerceService } from '../../services/woocommerce';
 import { useMyProductsStore } from '../../stores/myProductsStore';
@@ -36,7 +36,7 @@ export default function TiendaScreen() {
         .slice(0, 8);
     }
     if (section === 'ofertas') return PRODUCTS.filter((p) => p.promoCop !== null && p.inStock);
-    return PRODUCTS.filter((p) => p.category === section);
+    return PRODUCTS.filter((p) => inSection(p, section as ShopSection));
   }, [section, ownedIds]);
 
   const openProduct = PRODUCTS.find((p) => p.id === openId) ?? null;

@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
-import { Text, View } from 'react-native';
-import { effectivePrice, formatCop, type Product } from '../../constants/products';
+import { Image, Text, View } from 'react-native';
+import { effectivePrice, findProduct, formatCop, type Product } from '../../constants/products';
 import { relevanceFor } from '../../lib/commerce';
 import { mockWooCommerceService } from '../../services/woocommerce';
 import { useMyProductsStore } from '../../stores/myProductsStore';
@@ -38,8 +38,9 @@ export function ProductSheet({ product, visible, onClose, storeAvailable = true 
 
   if (!product) return null;
 
+  const ownedProducts = ownedIds.map(findProduct).filter((p): p is Product => !!p);
   const owned = owns(product.id);
-  const relevance = relevanceFor(product, { owned, ownedIds });
+  const relevance = relevanceFor(product, { owned, ownedProducts });
   const price = effectivePrice(product);
   const canBuy = product.inStock && storeAvailable;
 
@@ -54,18 +55,35 @@ export function ProductSheet({ product, visible, onClose, storeAvailable = true 
 
   return (
     <BottomSheet visible={visible} onClose={onClose} maxHeightPct={92}>
-      <View className="mb-3.5 h-[150px] items-center justify-center rounded-2xl bg-primary-soft">
-        <Text className="font-semibold text-[10px] text-primary-dark">foto del producto</Text>
+      <View className="mb-3.5 h-[200px] items-center justify-center overflow-hidden rounded-2xl bg-white">
+        {product.imageUrl ? (
+          <Image
+            source={{ uri: product.imageUrl }}
+            style={{ width: '100%', height: '100%' }}
+            resizeMode="contain"
+            accessibilityIgnoresInvertColors
+            accessibilityLabel={product.name}
+          />
+        ) : (
+          <View className="h-full w-full items-center justify-center bg-primary-soft">
+            <Text className="font-semibold text-[10px] text-primary-dark">sin imagen</Text>
+          </View>
+        )}
       </View>
 
       <Text className="font-extrabold text-[17px] leading-6 text-ink">{product.name}</Text>
 
-      <View className="my-2 flex-row items-center gap-2">
+      <View className="my-2 flex-row flex-wrap items-center gap-2">
         <Text className="font-extrabold text-[17px] text-primary">{formatCop(price)}</Text>
         {product.promoCop !== null ? (
           <Text className="font-semibold text-[13px] text-ink-secondary line-through">{formatCop(product.priceCop)}</Text>
         ) : null}
-        <Text className="font-semibold text-[11px] text-ink-secondary">★ {product.rating}</Text>
+        {product.rating > 0 ? (
+          <Text className="font-semibold text-[11px] text-ink-secondary">
+            ★ {product.rating.toFixed(1)}
+            {product.ratingCount > 0 ? ` (${product.ratingCount})` : ''}
+          </Text>
+        ) : null}
       </View>
 
       <Text className="mb-2 font-medium text-[13px] leading-6 text-ink">{product.description}</Text>
@@ -85,13 +103,10 @@ export function ProductSheet({ product, visible, onClose, storeAvailable = true 
           </Text>
         </View>
       ) : null}
-      {product.discontinued ? (
-        <View className="mb-3 rounded-xl bg-surface px-3 py-2.5">
-          <Text className="font-semibold text-xs leading-5 text-ink-secondary">
-            Este producto ya no se fabrica. Si lo tienes, sus guías y cuidados siguen disponibles.
-          </Text>
-        </View>
-      ) : null}
+      {/* "Producto descontinuado" (ficha §16.1) isn't shown yet: WooCommerce has
+          no such flag — a withdrawn product is simply unpublished and never
+          reaches this catalog. Surfacing it needs a real signal from UVA (a Woo
+          tag or a backend field), not a guess on our side. */}
       {!storeAvailable ? (
         <View className="mb-3 rounded-xl bg-warning-soft px-3 py-2.5">
           <Text className="font-semibold text-xs leading-5 text-warning">

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { idBySlug } from '../constants/products';
 
 /**
  * "Mis productos" ownership states (ficha §16.1).
@@ -37,10 +38,17 @@ type MyProductsStore = {
 };
 
 // Seeded to match the demo persona (Laura owns a cup and the Kegel balls).
-const SEED: Record<string, OwnershipState> = {
-  'p-copa2-a': 'lo-uso',
-  'p-kegel': 'lo-tengo',
+// Keyed by slug -> real Woo id, so the seed survives a catalog re-generation.
+const SEED_SLUGS: Record<string, OwnershipState> = {
+  'copa-menstrual-uva-2-talla-a': 'lo-uso',
+  'bolas-kegel-uva': 'lo-tengo',
 };
+
+const SEED: Record<string, OwnershipState> = Object.fromEntries(
+  Object.entries(SEED_SLUGS)
+    .map(([slug, state]) => [idBySlug(slug), state] as const)
+    .filter((entry): entry is [string, OwnershipState] => !!entry[0])
+);
 
 export const useMyProductsStore = create<MyProductsStore>((set, get) => ({
   byId: SEED,

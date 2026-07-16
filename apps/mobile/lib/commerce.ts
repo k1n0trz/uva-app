@@ -16,7 +16,19 @@ export type Relevance = {
   reason: string;
 };
 
-export function relevanceFor(product: Product, ctx: { owned: boolean; ownedIds: string[] }): Relevance {
+/** Matched on slugs, not the numeric Woo ids — readable and stable across a
+ *  catalog re-generation. */
+const isCup = (p: Product) => p.slug.includes('copa-menstrual') || p.slug.includes('disco-menstrual');
+
+/** Products that are genuinely used together with a cup. */
+const CUP_COMPANION_SLUGS = [
+  'lubricante-intimo-natural-elixir-100-ml',
+  'limpiador-de-copa-menstrual-uva',
+  'vaso-esterilizador-copa-uva',
+  'esterilizador-electrico-para-copas-menstruales',
+];
+
+export function relevanceFor(product: Product, ctx: { owned: boolean; ownedProducts: Product[] }): Relevance {
   if (ctx.owned) {
     return {
       kind: 'ya-lo-tienes',
@@ -26,15 +38,16 @@ export function relevanceFor(product: Product, ctx: { owned: boolean; ownedIds: 
   }
 
   // Only claim a link when there genuinely is one.
-  const hasCup = ctx.ownedIds.some((id) => id.startsWith('p-copa') || id === 'p-disco');
-  if (hasCup && (product.id === 'p-lub-copa' || product.id === 'p-limpiador-copa' || product.id === 'p-vaso' || product.id === 'p-esterilizador')) {
+  const hasCup = ctx.ownedProducts.some(isCup);
+
+  if (hasCup && CUP_COMPANION_SLUGS.includes(product.slug)) {
     return {
       kind: 'puede-ayudarte',
       label: 'Puede ayudarte',
       reason: 'Te lo muestro porque tienes una copa registrada y este producto se usa con ella. Es completamente opcional.',
     };
   }
-  if (hasCup && product.id === 'p-panties') {
+  if (hasCup && product.slug === 'panties-menstruales') {
     return {
       kind: 'opcional',
       label: 'Opcional',
@@ -54,5 +67,5 @@ export function relevanceFor(product: Product, ctx: { owned: boolean; ownedIds: 
  * "Recomendados" section, not browsing — she can still find it in its category.
  */
 export function isRecommendable(product: Product): boolean {
-  return product.inStock && !product.discontinued;
+  return product.inStock;
 }

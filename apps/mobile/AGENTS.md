@@ -39,6 +39,24 @@ preferences:
 - Services in `services/` are mocks behind typed interfaces — swap them for real
   API clients without touching UI. Never put keys/secrets in the app.
 
+## El catálogo es una FOTO, no datos en vivo
+
+`constants/catalog.generated.ts` sale del WooCommerce real de copauva.com vía
+`scripts/fetch-catalog.mjs`, corrido **a mano en la máquina del desarrollador**.
+
+Es así por una razón dura: **la app nunca puede tener las credenciales de
+WooCommerce**. Todo lo que va en un bundle de Expo es legible por cualquiera con
+el APK, y esas llaves escriben en la tienda (ficha §17.1/§24.1). Por eso se
+llama a Woo en tiempo de desarrollo y se commitea el resultado como datos
+estáticos.
+
+Consecuencias:
+- Precios y stock **se desactualizan**. Re-generar antes de cualquier demo donde
+  importen: `WOO_BASE_URL=... WOO_KEY=... WOO_SECRET=... node scripts/fetch-catalog.mjs`
+- Es un puente temporal. Cuando exista el backend, la app debe pedirle el
+  catálogo a él y este archivo se borra.
+- Referenciar productos en código por **slug**, no por el id numérico de Woo.
+
 ## Gotchas found the hard way
 
 - `react-native-web` keeps a closed `<Modal visible={false}>` mounted, leaving its

@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import { effectivePrice, formatCop, type Product } from '../../constants/products';
 
 type Props = {
@@ -30,8 +30,19 @@ export function ProductCard({ product, onPress, owned }: Props) {
       accessibilityLabel={a11y}
       className="overflow-hidden rounded-2xl border border-border bg-white"
     >
-      <View className="h-[92px] items-center justify-center bg-primary-soft">
-        <Text className="font-semibold text-[9px] text-primary-dark">producto</Text>
+      <View className="h-[110px] items-center justify-center bg-white">
+        {product.imageUrl ? (
+          <Image
+            source={{ uri: product.imageUrl }}
+            style={{ width: '100%', height: '100%' }}
+            resizeMode="contain"
+            accessibilityIgnoresInvertColors
+          />
+        ) : (
+          <View className="h-full w-full items-center justify-center bg-primary-soft">
+            <Text className="font-semibold text-[9px] text-primary-dark">sin imagen</Text>
+          </View>
+        )}
         <View className="absolute left-1.5 top-1.5 flex-row gap-1">
           {!product.inStock ? (
             <View className="rounded-full bg-ink px-2 py-0.5">

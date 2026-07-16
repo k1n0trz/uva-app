@@ -1,4 +1,4 @@
-import { PRODUCTS, type Product, type ProductCategory } from '../../constants/products';
+import { PRODUCTS, inSection, type Product, type ShopSection } from '../../constants/products';
 
 /**
  * WooCommerce adapter.
@@ -22,8 +22,8 @@ export type ProductVariation = {
 };
 
 export interface WooCommerceService {
-  listCategories(): Promise<{ id: ProductCategory; label: string }[]>;
-  listProducts(category?: ProductCategory): Promise<Product[]>;
+  listCategories(): Promise<{ id: ShopSection; label: string }[]>;
+  listProducts(section?: ShopSection): Promise<Product[]>;
   getProduct(id: string): Promise<Product | undefined>;
   listVariations(productId: string): Promise<ProductVariation[]>;
   /** Landing page for the product on the real store. */
@@ -40,14 +40,15 @@ export interface WooCommerceService {
 }
 
 /**
- * Configurable so staging/production can differ and so the real product URLs
- * can be swapped in without touching UI. Real value belongs in .env.
+ * Only used as a fallback. Real product URLs come from Woo's own `permalink`
+ * field — never reconstruct them from a slug, the store's URL structure is not
+ * ours to guess.
  */
 const STORE_BASE_URL = process.env.EXPO_PUBLIC_STORE_URL ?? 'https://copauva.com';
 
 const delay = <T>(value: T, ms = 300) => new Promise<T>((resolve) => setTimeout(() => resolve(value), ms));
 
-const CATEGORY_LABELS: Record<ProductCategory, string> = {
+const CATEGORY_LABELS: Record<ShopSection, string> = {
   copas: 'Copas y discos',
   kits: 'Kits',
   menstruacion: 'Menstruación',
@@ -60,18 +61,22 @@ const CATEGORY_LABELS: Record<ProductCategory, string> = {
 
 export const mockWooCommerceService: WooCommerceService = {
   listCategories: () =>
-    delay((Object.keys(CATEGORY_LABELS) as ProductCategory[]).map((id) => ({ id, label: CATEGORY_LABELS[id] }))),
+    delay((Object.keys(CATEGORY_LABELS) as ShopSection[]).map((id) => ({ id, label: CATEGORY_LABELS[id] }))),
 
-  listProducts: (category) => delay(category ? PRODUCTS.filter((p) => p.category === category) : PRODUCTS),
+  listProducts: (section) => delay(section ? PRODUCTS.filter((p) => inSection(p, section)) : PRODUCTS),
 
   getProduct: (id) => delay(PRODUCTS.find((p) => p.id === id)),
 
-  // Real variations come from Woo; the mock catalog models sizes as separate products.
+  // Sizes are separate products in this store, so there are no variations yet.
+  // Real ones arrive with the backend sync.
   listVariations: (_productId) => delay([]),
 
-  productUrl: (product) => `${STORE_BASE_URL}/producto/${product.slug}`,
+  productUrl: (product) => product.permalink || `${STORE_BASE_URL}/producto/${product.slug}`,
 
-  checkoutUrl: (product) => `${STORE_BASE_URL}/producto/${product.slug}`,
+  // ficha §17.3 recommends going straight to a pre-filled cart/checkout. That
+  // needs the backend to build the link with real Woo product ids, so for now
+  // this lands on the product page.
+  checkoutUrl: (product) => product.permalink || `${STORE_BASE_URL}/producto/${product.slug}`,
 
   getOrderStatus: (_orderId) => delay<OrderStatus>('unknown'),
 

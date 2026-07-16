@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ProductSheet } from '../components/commerce/ProductSheet';
 import { AppButton, ChipGroup, EmptyState } from '../components/ui';
@@ -11,10 +11,10 @@ import { useToastStore } from '../stores/toastStore';
 
 const STATE_ORDER: OwnershipState[] = ['lo-tengo', 'lo-uso', 'quiero-conocerlo', 'deje-de-usarlo', 'no-recuerdo'];
 
-/** Related routine per product — only where UVA content genuinely exists. */
-const RELATED_ROUTINE: Record<string, { id: string; label: string }> = {
-  'p-kegel': { id: 'kegel1', label: 'Rutina con Bolas Kegel' },
-  'p-dilatadores': { id: 'r1', label: 'Conciencia corporal' },
+/** Related routine per product, keyed by slug — only where UVA content genuinely exists. */
+const RELATED_ROUTINE_BY_SLUG: Record<string, { id: string; label: string }> = {
+  'bolas-kegel-uva': { id: 'kegel1', label: 'Rutina con Bolas Kegel' },
+  'dilatadores-vaginales': { id: 'r1', label: 'Conciencia corporal' },
 };
 
 export default function MyProductsScreen() {
@@ -57,22 +57,24 @@ export default function MyProductsScreen() {
           entries.map(([id, state]) => {
             const product = findProduct(id);
             if (!product) return null;
-            const routine = RELATED_ROUTINE[id];
+            const routine = RELATED_ROUTINE_BY_SLUG[product.slug];
             return (
               <View key={id} className="gap-3 rounded-2xl border border-border bg-white p-4">
                 <View className="flex-row items-start gap-3">
-                  <View className="h-12 w-12 items-center justify-center rounded-xl bg-primary-soft">
-                    <Text className="font-semibold text-[8px] text-primary-dark">foto</Text>
+                  <View className="h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-white">
+                    {product.imageUrl ? (
+                      <Image source={{ uri: product.imageUrl }} style={{ width: '100%', height: '100%' }} resizeMode="contain" />
+                    ) : (
+                      <View className="h-full w-full items-center justify-center bg-primary-soft">
+                        <Text className="font-semibold text-[8px] text-primary-dark">foto</Text>
+                      </View>
+                    )}
                   </View>
                   <View className="flex-1">
                     <Text className="font-bold text-sm leading-5 text-ink">{product.name}</Text>
+                    {/* She can own something the store has run out of — that's fine, her guides stay. */}
                     {!product.inStock ? (
                       <Text className="mt-1 font-semibold text-[11px] text-warning">Agotado en la tienda</Text>
-                    ) : null}
-                    {product.discontinued ? (
-                      <Text className="mt-1 font-semibold text-[11px] text-ink-secondary">
-                        Ya no se fabrica — tus guías siguen aquí
-                      </Text>
                     ) : null}
                   </View>
                 </View>
