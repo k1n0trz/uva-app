@@ -26,7 +26,7 @@ El frontend (`UVA App.dc.html`) es la fuente de verdad visual: hay que reproduci
 - Comercio: **WooCommerce REST API** (credenciales solo en backend) + **Mercado Pago** vía checkout de WooCommerce.
 - Monorepo sugerido (Turborepo/Nx) para compartir tipos entre app, admin y backend.
 
-> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1 a 5 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
+> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1 a 6 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
 >
 > **Cómo correr la app** — Web: `cd apps/mobile && npx expo export --platform web` (o `npx expo start --web`). Nativo (Android, con teléfono en modo desarrollador por USB): `cd apps/mobile && npx expo start`, luego escanear el QR con Expo Go, o `adb reverse tcp:8081 tcp:8081` + abrir `exp://127.0.0.1:8081` en Expo Go.
 
@@ -148,16 +148,21 @@ Pantallas del prototipo: splash → intro Vera (voz/texto) → onboarding conver
 
 ## Fase 6 — Mis productos, Tienda, WooCommerce/Mercado Pago (mock → real)
 
-| # | Tarea | Dueño |
-|---|---|---|
-| 6.1 | "Mis productos": estados (lo tengo / lo uso / quiero conocerlo / dejé de usarlo / no recuerdo cuál es), tutoriales, rutinas relacionadas, FAQs | ⚪ Claude |
-| 6.2 | Tienda: categorías, grid de productos, ficha de producto (precio COP, promo, stock, rating, "por qué te lo recomendamos", agregar a mis productos, ver en UVA, comprar) | ⚪ Claude |
-| 6.3 | Checkout simulado: abre "ventana segura" (WebBrowser) con vuelta clara a la app — **nunca** checkout nativo ni datos de tarjeta simulados | ⚪ Claude |
-| 6.4 | **Integración real WooCommerce**: sync de catálogo/precio/stock/variantes vía REST API, claves solo en backend, webhooks para inventario/pedidos | 🔵 Codex |
-| 6.5 | **Enlace de compra con producto/variación ya en el carrito** (no solo landing) para reducir fricción, con Mercado Pago como método de pago en WooCommerce (ficha §17.3, recomendación explícita) | 🔵 Codex |
-| 6.6 | Atribución de conversión (clic → apertura checkout → compra) sin enviar datos íntimos a plataformas publicitarias | 🔵 Codex |
-| 6.7 | Reglas comerciales: nunca recomendar agotado, explicar motivo, distinguir "puede ayudarte"/"opcional"/"ya lo tienes" | ⚪ Claude (UI) + 🔵 Codex (motor de recomendación) |
-| 6.8 | Confirmar con el equipo de e-commerce si se comparte identidad de cuenta o se vincula por correo/token entre app y WooCommerce (ficha §33, decisión pendiente) | 🟣 UVA |
+| # | Tarea | Dueño | Estado |
+|---|---|---|---|
+| 6.1 | "Mis productos": estados (lo tengo / lo uso / quiero conocerlo / dejé de usarlo / no recuerdo cuál es), rutinas relacionadas, guías | ⚪ Claude | ✅ `app/my-products.tsx` + `stores/myProductsStore.ts` — los 5 estados de la ficha §16.1 |
+| 6.2 | Tienda: categorías, grid de productos, ficha de producto (precio COP, promo, stock, rating, "por qué te lo recomendamos", agregar a mis productos, ver en UVA, comprar) | ⚪ Claude | ✅ `app/(tabs)/tienda.tsx` + `components/commerce/*` — catálogo completo de la ficha §8.4 (35 productos, 10 secciones) |
+| 6.3 | Compra: abre ventana segura (WebBrowser) con vuelta clara a la app — **nunca** checkout nativo ni datos de tarjeta simulados | ⚪ Claude | ✅ `WebBrowser.openBrowserAsync` con URL configurable (`EXPO_PUBLIC_STORE_URL`). Auditado: 0 formularios de tarjeta, 0 datos de pago, 0 credenciales en el front |
+| 6.4 | **Integración real WooCommerce**: sync de catálogo/precio/stock/variantes vía REST API, claves solo en backend, webhooks para inventario/pedidos | 🔵 Codex | Contrato listo en `services/woocommerce` (products, categories, variations, prices, stock, productUrl, checkoutUrl, orderStatus, isAvailable) |
+| 6.5 | **Enlace de compra con producto/variación ya en el carrito** (no solo landing) para reducir fricción, con Mercado Pago (ficha §17.3, recomendación explícita) | 🔵 Codex | `checkoutUrl()` existe como punto de extensión — hoy apunta a la landing porque los IDs reales de Woo aún no existen |
+| 6.6 | Atribución de conversión (clic → apertura checkout → compra) sin enviar datos íntimos a plataformas publicitarias | 🔵 Codex | |
+| 6.7 | Reglas comerciales: nunca recomendar agotado, explicar motivo, distinguir "puede ayudarte"/"opcional"/"ya lo tienes" | ⚪ Claude (UI) + 🔵 Codex (motor) | ✅ `lib/commerce.ts` — verificado: agotado no se recomienda ni se puede comprar |
+| 6.8 | Confirmar con el equipo de e-commerce si se comparte identidad de cuenta o se vincula por correo/token entre app y WooCommerce (ficha §33, decisión pendiente) | 🟣 UVA | 🔴 Pendiente |
+
+**Notas de Fase 6:**
+- ⚠️ **Precios, stock, ratings e imágenes del catálogo son placeholders inventados.** Los nombres sí son los reales (ficha §8.4), pero los valores vienen del sync de WooCommerce (§17.1). **No citar estos precios a nadie.**
+- La app **no** finge personalizar: cuando no hay una razón real, la ficha del producto dice literalmente *"Es parte del catálogo de UVA. No lo estoy recomendando para ti en particular"* (ficha §18.4).
+- `.env.example` creado (pendiente desde Fase 0), con la regla explícita de que `EXPO_PUBLIC_*` queda visible en el bundle y las credenciales viven solo en backend.
 
 ---
 

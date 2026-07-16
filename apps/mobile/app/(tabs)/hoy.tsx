@@ -7,10 +7,12 @@ import { TabScreenShell } from '../../components/nav';
 import { AppButton, LoadingSkeleton, ProgressRing } from '../../components/ui';
 import { AbrilAvatar } from '../../components/abril';
 import { ASSISTANT_NAME } from '../../constants/brand';
+import { findProduct } from '../../constants/products';
 import { todayIso } from '../../lib/date';
 import { mockCycleService } from '../../services/cycle';
 import { useCheckinStore, isEmptyCheckIn, isPartialCheckIn } from '../../stores/checkinStore';
 import { useFirstCupStore } from '../../stores/firstCupStore';
+import { useMyProductsStore } from '../../stores/myProductsStore';
 import { useScenarioFlags } from '../../stores/scenarioStore';
 
 const comingSoon = (phase: string) => () =>
@@ -25,11 +27,14 @@ function CardLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function HoyScreen() {
-  const { hasCup, hasProducts, isOffline, micDenied, isNewUser, cycleDataState } = useScenarioFlags();
+  const { hasCup, isOffline, micDenied, isNewUser, cycleDataState } = useScenarioFlags();
   const [checkinOpen, setCheckinOpen] = useState(false);
   const iso = todayIso();
   const savedToday = useCheckinStore((s) => s.byDate[iso]);
   const openDraftFor = useCheckinStore((s) => s.openDraftFor);
+  const myProducts = useMyProductsStore((s) => s.ownedIds)()
+    .map(findProduct)
+    .filter((p): p is NonNullable<typeof p> => !!p);
 
   const predictionQuery = useQuery({
     queryKey: ['cycle', 'prediction', cycleDataState],
@@ -142,23 +147,25 @@ export default function HoyScreen() {
         </Pressable>
       ) : null}
 
-      {/* Prepárate */}
+      {/* Prepárate — her actual registered products, not a hardcoded list */}
       <View className="gap-3 rounded-3xl border border-primary-border bg-primary-xsoft p-[18px]">
         <Text className="font-semibold text-[11px] uppercase text-primary-dark">Prepárate</Text>
         <Text className="font-medium text-[13px] leading-5 text-ink">
-          {hasProducts
+          {myProducts.length > 0
             ? 'Con base en tu ciclo, quizá quieras tener a mano estos productos:'
             : 'No necesitas tener productos UVA para usar la app. Si quieres, explora opciones cuando te sirva.'}
         </Text>
-        {hasProducts ? (
+        {myProducts.length > 0 ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">
-            {['Copa UVA 2 talla A', 'Bolas Kegel UVA'].map((name) => (
-              <View key={name} style={{ width: 96 }}>
+            {myProducts.map((p) => (
+              <Pressable key={p.id} onPress={() => router.push('/my-products')} style={{ width: 96 }} accessibilityRole="button">
                 <View className="h-[72px] items-center justify-center rounded-xl border border-primary-border bg-primary-soft">
                   <Text className="font-semibold text-[9px] text-primary-dark">producto</Text>
                 </View>
-                <Text className="mt-1.5 text-center font-semibold text-[11px] text-ink">{name}</Text>
-              </View>
+                <Text className="mt-1.5 text-center font-semibold text-[11px] text-ink" numberOfLines={2}>
+                  {p.name}
+                </Text>
+              </Pressable>
             ))}
           </ScrollView>
         ) : (
