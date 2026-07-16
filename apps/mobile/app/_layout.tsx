@@ -52,6 +52,9 @@ export default function RootLayout() {
               <Stack.Screen name="first-cup" options={{ presentation: 'modal' }} />
               <Stack.Screen name="kegel-intake" options={{ presentation: 'modal' }} />
               <Stack.Screen name="my-products" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="profile" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="memory" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="privacy" options={{ presentation: 'modal' }} />
               <Stack.Screen name="routine/[id]" options={{ presentation: 'fullScreenModal' }} />
             </Stack>
           </View>

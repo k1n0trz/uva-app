@@ -26,7 +26,7 @@ El frontend (`UVA App.dc.html`) es la fuente de verdad visual: hay que reproduci
 - Comercio: **WooCommerce REST API** (credenciales solo en backend) + **Mercado Pago** vía checkout de WooCommerce.
 - Monorepo sugerido (Turborepo/Nx) para compartir tipos entre app, admin y backend.
 
-> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1 a 6 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
+> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1 a 7 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
 >
 > **Cómo correr la app** — Web: `cd apps/mobile && npx expo export --platform web` (o `npx expo start --web`). Nativo (Android, con teléfono en modo desarrollador por USB): `cd apps/mobile && npx expo start`, luego escanear el QR con Expo Go, o `adb reverse tcp:8081 tcp:8081` + abrir `exp://127.0.0.1:8081` en Expo Go.
 
@@ -171,11 +171,18 @@ Pantallas del prototipo: splash → intro Vera (voz/texto) → onboarding conver
 
 ## Fase 7 — Perfil, privacidad y memoria (mock)
 
-| # | Tarea | Dueño |
-|---|---|---|
-| 7.1 | Perfil: objetivos, ciclo, productos, preferencias de Vera, voz/audio, notificaciones, modo discreto, biometría, cuenta, pedidos, privacidad, descargar mis datos, eliminar cuenta, cerrar sesión | ⚪ Claude |
-| 7.2 | "Lo que Vera sabe de mí": ver/corregir/eliminar recuerdos, diferenciar declarado vs. inferido, activar/desactivar memoria, borrar historial conversacional | ⚪ Claude |
-| 7.3 | **Backend real**: exportación de datos, eliminación de cuenta con confirmación, borrado de memoria/historial con retención configurable | 🔵 Codex |
+| # | Tarea | Dueño | Estado |
+|---|---|---|---|
+| 7.1 | Perfil: objetivos, ciclo, productos, preferencias de Abril, voz/audio, notificaciones, modo discreto, biometría, cuenta, pedidos, privacidad, descargar mis datos, eliminar cuenta, cerrar sesión | ⚪ Claude | ✅ `app/profile.tsx` — las 14 filas. Funcionan de verdad: preferencias, voz, modo discreto. Biometría/Cuenta/Pedidos son placeholders honestos (dependen de backend o del dispositivo) |
+| 7.2 | "Lo que Abril sabe de mí": ver/corregir/eliminar recuerdos, diferenciar declarado vs. inferido, activar/desactivar memoria, borrar historial conversacional | ⚪ Claude | ✅ `app/memory.tsx` + `hooks/useMemories.ts` + `stores/memoryStore.ts` |
+| 7.3 | **Backend real**: exportación de datos, eliminación de cuenta con confirmación, borrado de memoria/historial con retención configurable | 🔵 Codex | La UI está lista y dice explícitamente que la descarga y la eliminación reales las hace el backend |
+
+**Notas de Fase 7 — la memoria:**
+- **Los recuerdos se derivan del estado real de la app, no se guardan aparte.** Si ella corrige "tu ciclo dura 5 días", corrige el dato que la app *realmente usa*, no una copia que se desincroniza. `stores/memoryStore.ts` solo guarda lo que ella *hizo* con esos datos (apagar memoria, corregir, borrar).
+- **No se inventa nada.** Una inferencia solo aparece si los datos la sostienen, y **cita su evidencia**: *"Sueles registrar cólicos (2 de 2 registros)"*. Con la app vacía la lista es corta, y esa es la respuesta honesta (ficha §18.4: "No debe fingir personalización profunda").
+- Cada recuerdo dice **para qué se usa**. Lo declarado se corrige; lo inferido se borra (ella tiene la última palabra).
+- La pantalla nombra en voz alta **lo que nunca se deduce** (ficha §18.2): diagnósticos, embarazo, orientación sexual, actividad sexual, infertilidad, problemas de pareja, capacidad económica, estado emocional clínico. Si un motor de recomendación futuro empieza a derivar alguno, es un bug, no una mejora.
+- Acciones destructivas con confirmación real (brief §21): eliminar cuenta exige escribir `ELIMINAR`; retirar el consentimiento sensible explica antes qué se pierde.
 
 ---
 
