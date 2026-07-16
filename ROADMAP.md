@@ -24,7 +24,7 @@ El frontend (`UVA App.dc.html`) es la fuente de verdad visual: hay que reproduci
 - Comercio: **WooCommerce REST API** (credenciales solo en backend) + **Mercado Pago** vía checkout de WooCommerce.
 - Monorepo sugerido (Turborepo/Nx) para compartir tipos entre app, admin y backend.
 
-> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1 y 2 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
+> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1, 2 y 3 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
 >
 > **Cómo correr la app** — Web: `cd apps/mobile && npx expo export --platform web` (o `npx expo start --web`). Nativo (Android, con teléfono en modo desarrollador por USB): `cd apps/mobile && npx expo start`, luego escanear el QR con Expo Go, o `adb reverse tcp:8081 tcp:8081` + abrir `exp://127.0.0.1:8081` en Expo Go.
 
@@ -86,14 +86,19 @@ Pantallas del prototipo: splash → intro Vera (voz/texto) → onboarding conver
 
 ## Fase 3 — Hoy, Calendario y Check-in (mock)
 
-| # | Tarea | Dueño |
-|---|---|---|
-| 3.1 | Pantalla "Hoy con Vera": saludo, tarjeta Vera, resumen de ciclo, "Tu cuerpo hoy", "Tu rutina", tarjeta Primera Copa (condicional), "Prepárate" con productos, promo, botón "Necesito ayuda ahora" | ⚪ Claude |
-| 3.2 | Check-in diario en bottom sheet: flujo, síntomas (multi-select), nota, estados (sin síntomas, parcial, guardado, error, sin conexión) | ⚪ Claude |
-| 3.3 | Calendario mensual: celdas con estado (registrado/estimado/hoy), leyenda, historial de ciclos, nota de confianza según regularidad | ⚪ Claude |
-| 3.4 | Mensajería de incertidumbre correcta según ficha §12.2 (sin historial / un ciclo / varios ciclos / irregular / embarazo-posparto-menopausia desactiva predicción estándar) | ⚪ Claude (copy) + 🔵 Codex (lógica real) |
-| 3.5 | **Backend real**: servicio de ciclo (registrar, editar, calcular predicción por rango con nivel de confianza, no anticonceptiva/no diagnóstica), servicio de check-in (crear/editar/consultar) | 🔵 Codex |
-| 3.6 | Modo offline: guardar registro local y sincronizar después (ficha §26 Offline) | 🔵 Codex (sync) + ⚪ Claude (UI offline banner, ya está en el prototipo) |
+| # | Tarea | Dueño | Estado |
+|---|---|---|---|
+| 3.1 | Pantalla "Hoy con Vera": saludo, tarjeta Vera, resumen de ciclo, "Tu cuerpo hoy", "Tu rutina", tarjeta Primera Copa (condicional), "Prepárate" con productos, promo, botón "Necesito ayuda ahora" | ⚪ Claude | ✅ `app/(tabs)/hoy.tsx` + `ProgressRing` (SVG) |
+| 3.2 | Check-in diario en bottom sheet: flujo, dolor, energía, ánimo, síntomas, producto, nota + voz; estados (sin síntomas, parcial, guardado, edición, error, sin conexión) | ⚪ Claude | ✅ `components/cycle/DailyCheckIn.tsx` + `stores/checkinStore.ts` |
+| 3.3 | Calendario mensual: celdas con estado (registrado/estimado/hoy), leyenda, historial de ciclos, nota de confianza según regularidad | ⚪ Claude | ✅ `components/cycle/PeriodCalendar.tsx` + `app/(tabs)/calendario.tsx` (grilla real desde la fecha del sistema, no hardcodeada) |
+| 3.4 | Mensajería de incertidumbre correcta según ficha §12.2 (sin historial / irregular / varios ciclos / embarazo-posparto-menopausia desactiva predicción estándar) | ⚪ Claude (copy) + 🔵 Codex (lógica real) | ✅ copy + estados en `services/cycle` (`regular`/`irregular`/`insufficient`/`disabled`) |
+| 3.5 | **Backend real**: servicio de ciclo (registrar, editar, calcular predicción por rango con nivel de confianza, no anticonceptiva/no diagnóstica), servicio de check-in (crear/editar/consultar) | 🔵 Codex | Contrato listo en `services/cycle` — reemplazar el mock por cliente HTTP |
+| 3.6 | Modo offline: guardar registro local y sincronizar después (ficha §26 Offline) | 🔵 Codex (sync) + ⚪ Claude (UI) | ⚪ UI lista (banner + copy "se sincroniza al reconectar"); falta la sync real |
+
+**Notas de Fase 3:**
+- El check-in extiende el prototipo con dolor/energía/ánimo/producto porque la ficha §12.1 los lista como datos de entrada del calendario. Todo es opcional: un registro parcial es válido y se guarda (se distingue con el badge "Registro parcial").
+- Los estados del calendario van también en el `aria-label` de cada día ("16, sin registros, hoy"), para no depender solo del color (brief §22).
+- **Bug de accesibilidad encontrado y corregido durante la verificación:** react-native-web mantiene montado un `<Modal visible={false}>`, dejando los 27 controles del check-in cerrado dentro del árbol de accesibilidad y del orden de tabulación. `BottomSheet`/`AppModal` ahora retornan `null` cuando están cerrados. No revertir.
 
 ---
 

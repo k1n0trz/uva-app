@@ -7,10 +7,19 @@ type Props = PropsWithChildren<{
   maxHeightPct?: number;
 }>;
 
-/** Bottom-anchored drawer matching the prototype's check-in / product-detail sheets. */
+/**
+ * Bottom-anchored drawer matching the prototype's check-in / product-detail sheets.
+ *
+ * We return null when closed instead of relying on `<Modal visible={false}>`:
+ * react-native-web keeps a closed Modal mounted, which leaves its controls in
+ * the accessibility tree and the keyboard tab order even though nothing is
+ * visible on screen (brief §22 requires screen-reader and keyboard support).
+ */
 export function BottomSheet({ visible, onClose, maxHeightPct = 88, children }: Props) {
+  if (!visible) return null;
+
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal visible transparent animationType="slide" onRequestClose={onClose}>
       <View className="flex-1 justify-end bg-ink/35">
         <Pressable className="absolute inset-0" onPress={onClose} accessibilityLabel="Cerrar" />
         <View className="rounded-t-4xl bg-white" style={{ maxHeight: `${maxHeightPct}%` }}>

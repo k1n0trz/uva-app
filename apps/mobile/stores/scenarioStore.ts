@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { CycleDataState } from '../services/cycle';
 
 /**
  * Development-only scenario switcher, ported 1:1 from the prototype's
@@ -39,6 +40,13 @@ export function scenarioFlags(scenario: ScenarioId) {
     micDenied: scenario === 'micDenied',
     isOffline: scenario === 'offline',
     isNewUser: scenario === 'newUser',
+    /** Maps the dev scenario onto the domain state the cycle service understands.
+     *  In production this comes from the user's real data, not from a scenario. */
+    cycleDataState: (scenario === 'newUser'
+      ? 'insufficient'
+      : scenario === 'irregular'
+        ? 'irregular'
+        : 'regular') as CycleDataState,
   };
 }
 
