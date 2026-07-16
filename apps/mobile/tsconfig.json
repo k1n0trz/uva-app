@@ -1,7 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    // The rules test runs on bare node (--experimental-strip-types), which needs
+    // explicit .ts import specifiers. Safe here: Expo builds via Babel, not tsc.
+    "allowImportingTsExtensions": true
   },
   "include": ["**/*.ts", "**/*.tsx", "nativewind-env.d.ts", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

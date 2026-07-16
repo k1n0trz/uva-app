@@ -193,12 +193,7 @@ export default function AbrilScreen() {
         ) : null}
         {lastIntent === 'rutina' ? (
           <View className="items-start">
-            <AppButton
-              label="Empezar rutina de respiración"
-              variant="dark"
-              size="sm"
-              onPress={() => Alert.alert('Próximamente', 'El reproductor de rutinas llega en la Fase 5 del roadmap.')}
-            />
+            <AppButton label="Empezar rutina de respiración" variant="dark" size="sm" onPress={() => router.push('/routine/r2')} />
           </View>
         ) : null}
       </ScrollView>

@@ -26,7 +26,7 @@ El frontend (`UVA App.dc.html`) es la fuente de verdad visual: hay que reproduci
 - Comercio: **WooCommerce REST API** (credenciales solo en backend) + **Mercado Pago** vía checkout de WooCommerce.
 - Monorepo sugerido (Turborepo/Nx) para compartir tipos entre app, admin y backend.
 
-> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1, 2, 3 y 4 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
+> **Estado de avance:** la app consumidor vive en [`apps/mobile`](apps/mobile) (Expo Router + RN + RN Web + NativeWind + TS estricto, **Expo SDK 54**). Fases 1 a 5 listas y verificadas por web (`expo export`) **y nativamente en un Galaxy S22+ vía Expo Go**. Repo en [github.com/k1n0trz/uva-app](https://github.com/k1n0trz/uva-app). Ver detalle marcado ✅ más abajo.
 >
 > **Cómo correr la app** — Web: `cd apps/mobile && npx expo export --platform web` (o `npx expo start --web`). Nativo (Android, con teléfono en modo desarrollador por USB): `cd apps/mobile && npx expo start`, luego escanear el QR con Expo Go, o `adb reverse tcp:8081 tcp:8081` + abrir `exp://127.0.0.1:8081` en Expo Go.
 
@@ -128,14 +128,21 @@ Pantallas del prototipo: splash → intro Vera (voz/texto) → onboarding conver
 
 ## Fase 5 — Rutinas, piso pélvico y Bolas Kegel (mock)
 
-| # | Tarea | Dueño |
-|---|---|---|
-| 5.1 | Hub de rutinas generales (conciencia, respiración, coordinación, fortalecimiento, resistencia) — disponibles para todas | ⚪ Claude |
-| 5.2 | Evaluación inicial Kegel (4+ preguntas de elegibilidad y señales de exclusión) | ⚪ Claude |
-| 5.3 | 3 niveles Kegel con gate real: declarar tener las bolas **y** pasar el filtro **y** superar autoevaluación de cada nivel — nunca desbloquear por compra o por solo completar sesión (ficha §15.4, corrección importante) | ⚪ Claude (UI) + 🔵 Codex (reglas de progresión) |
-| 5.4 | Player de rutina: temporizador, animación de respiración, pausar/reanudar/finalizar, autoevaluación final (comodidad/control/dolor), advertencia si hay dolor | ⚪ Claude |
-| 5.5 | Historial de rutinas | ⚪ Claude (UI) + 🔵 Codex (persistencia) |
-| 5.6 | **Validación clínica del contenido Kegel/piso pélvico por profesional antes de producción** (ficha §33 — riesgo marcado explícitamente) | 🟣 UVA |
+| # | Tarea | Dueño | Estado |
+|---|---|---|---|
+| 5.1 | Hub de rutinas generales (conciencia, respiración, coordinación, fortalecimiento, resistencia) — disponibles para todas | ⚪ Claude | ✅ `app/(tabs)/rutinas.tsx` + `constants/routines.ts` |
+| 5.2 | Evaluación inicial Kegel (preguntas de elegibilidad y señales de exclusión) | ⚪ Claude | ✅ `app/kegel-intake.tsx` — 9 preguntas siguiendo la ficha §15.2 (el prototipo tenía 4) |
+| 5.3 | 3 niveles Kegel con gate real: declarar tener las bolas **y** pasar el filtro **y** superar autoevaluación de cada nivel — nunca desbloquear por compra o por solo completar sesión (ficha §15.4, corrección importante) | ⚪ Claude (UI) + 🔵 Codex (reglas de progresión) | ✅ `lib/kegelRules.ts` (lógica pura) + 19 pruebas en `lib/kegelRules.test.ts` (`npm run test:rules`) |
+| 5.4 | Player de rutina: temporizador, animación de respiración, pausar/reanudar/finalizar, autoevaluación final (comodidad/control/dolor), advertencia si hay dolor | ⚪ Claude | ✅ `app/routine/[id].tsx` + hápticos opcionales |
+| 5.5 | Historial de rutinas | ⚪ Claude (UI) + 🔵 Codex (persistencia) | ⚪ UI lista; falta persistencia real |
+| 5.6 | **Validación clínica del contenido Kegel/piso pélvico por profesional antes de producción** (ficha §33 — riesgo marcado explícitamente) | 🟣 UVA | 🔴 **Bloqueante para producción** — el contenido está marcado como placeholder en el código |
+
+**Notas de Fase 5 — las reglas de seguridad:**
+- Las reglas del gate viven en [`lib/kegelRules.ts`](apps/mobile/lib/kegelRules.ts), **puras y sin estado**, para que **Codex las replique idénticas en el backend**. El cliente no puede ser lo único que separe a una usuaria de una rutina insegura: la ficha §15.4 hace del servidor la autoridad real.
+- **Ambas reglas fallan cerradas**: dato faltante nunca es un "pase".
+- Bug encontrado y corregido al escribir las pruebas: la lógica preguntaba "¿reportó algo malo?" en vez de "¿confirmó que está bien?", así que una evaluación a medias (solo "sí, tengo las bolas") desbloqueaba el Nivel 1 — exactamente el *"se desbloquea por compra"* que la ficha prohíbe. Corregido y cubierto por prueba.
+- El avance entre niveles exige **2 sesiones** del nivel anterior con autoevaluación sin dolor y con control. Nunca por días transcurridos ni por completar una sola sesión.
+- Correr las pruebas: `cd apps/mobile && npm run test:rules`.
 
 ---
 

@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { goBackOr } from '../lib/nav';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppButton } from '../components/ui';
@@ -28,7 +29,7 @@ export default function FirstCupScreen() {
     <View className="flex-1 bg-surface" style={{ paddingTop: insets.top }}>
       <View className="flex-row items-center gap-3 border-b border-border bg-white px-5 py-4">
         <Pressable
-          onPress={() => router.back()}
+          onPress={() => goBackOr('/(tabs)/hoy')}
           accessibilityRole="button"
           accessibilityLabel="Volver"
           className="h-9 w-9 items-center justify-center rounded-full border border-border bg-white"

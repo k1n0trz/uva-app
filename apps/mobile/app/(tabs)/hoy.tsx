@@ -124,7 +124,7 @@ export default function HoyScreen() {
             <Text className="font-bold text-sm text-ink">Respiración 4-7-8</Text>
             <Text className="mt-0.5 font-medium text-xs text-ink-secondary">3 min</Text>
           </View>
-          <AppButton label="Empezar" variant="dark" size="sm" onPress={comingSoon('la Fase 5 (Rutinas)')} />
+          <AppButton label="Empezar" variant="dark" size="sm" onPress={() => router.push('/routine/r2')} />
         </View>
       </Card>
 

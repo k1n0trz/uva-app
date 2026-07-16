@@ -50,6 +50,8 @@ export default function RootLayout() {
               <Stack.Screen name="(tabs)" />
               <Stack.Screen name="rescue" options={{ presentation: 'modal' }} />
               <Stack.Screen name="first-cup" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="kegel-intake" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="routine/[id]" options={{ presentation: 'fullScreenModal' }} />
             </Stack>
           </View>
         </View>
