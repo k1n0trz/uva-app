@@ -6,7 +6,7 @@ import { AbrilAvatar, AbrilState } from '../../components/abril';
 import { AppButton, HealthWarning } from '../../components/ui';
 import { ASSISTANT_NAME } from '../../constants/brand';
 import { RESCUE_WARNING } from '../../constants/rescue';
-import { mockAbrilChatService } from '../../services/abril';
+import { abrilChatService } from '../../services/abril';
 import { makeMessage, useChatStore, type ChatStatus, type VoiceStage } from '../../stores/chatStore';
 import { useScenarioFlags } from '../../stores/scenarioStore';
 import { useToastStore } from '../../stores/toastStore';
@@ -67,7 +67,7 @@ export default function AbrilScreen() {
     setInput('');
     setStatus('thinking');
 
-    const reply = await mockAbrilChatService.sendMessage(clean, replyLength);
+    const reply = await abrilChatService.sendMessage(clean, replyLength);
     addMessage(makeMessage('abril', reply.text, reply.warn));
     setLastIntent(reply.intent);
 
@@ -109,14 +109,14 @@ export default function AbrilScreen() {
     const lastUser = [...messages].reverse().find((m) => m.from === 'user');
     if (!lastUser) return;
     setStatus('thinking');
-    const reply = await mockAbrilChatService.rephrase(lastUser.text, replyLength);
+    const reply = await abrilChatService.rephrase(lastUser.text, replyLength);
     addMessage(makeMessage('abril', reply.text, reply.warn));
     setStatus('idle');
   };
 
   const rate = async (id: string, rating: 'up' | 'down') => {
     rateMessage(id, rating);
-    await mockAbrilChatService.rateMessage(id, rating);
+    await abrilChatService.rateMessage(id, rating);
     showToast(rating === 'up' ? 'Gracias — me ayuda a mejorar.' : 'Gracias. Voy a intentarlo distinto.');
   };
 

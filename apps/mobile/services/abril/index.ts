@@ -90,3 +90,54 @@ export const mockAbrilChatService: AbrilChatService = {
 
   rateMessage: (_messageId, _rating) => delay(undefined, 200),
 };
+
+/**
+ * Real client: talks to the AI proxy (apps/ai-proxy), which holds the DeepSeek
+ * key and applies the health-safety rules server-side. The key is NEVER here —
+ * only the proxy URL, which is safe to ship.
+ *
+ * Resilient by design: any failure (proxy down, network) returns a safe,
+ * honest fallback rather than throwing, so the chat never gets stuck.
+ */
+const SAFE_FALLBACK: AbrilReply = {
+  text: 'Ahora mismo no puedo responder bien. Puedes seguir registrando cómo te sientes y lo retomamos en un momento.',
+  intent: null,
+  warn: false,
+};
+
+function makeProxyService(proxyUrl: string): AbrilChatService {
+  const post = async (text: string, length: ReplyLength): Promise<AbrilReply> => {
+    try {
+      const res = await fetch(`${proxyUrl.replace(/\/$/, '')}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, replyLength: length }),
+      });
+      if (!res.ok) return SAFE_FALLBACK;
+      const data = (await res.json()) as Partial<AbrilReply>;
+      return {
+        text: data.text || SAFE_FALLBACK.text,
+        intent: (data.intent ?? null) as ChatIntent,
+        warn: !!data.warn,
+      };
+    } catch {
+      return SAFE_FALLBACK;
+    }
+  };
+
+  return {
+    sendMessage: (text, length) => post(text, length),
+    rephrase: (text, length) => post(`${text}\n\n(Explícame lo mismo de otra forma, por favor.)`, length),
+    rateMessage: (_messageId, _rating) => Promise.resolve(),
+  };
+}
+
+/**
+ * The service the app uses. Swaps to the real DeepSeek-backed proxy when
+ * EXPO_PUBLIC_AI_PROXY_URL is set; otherwise the mock keeps the chat working
+ * offline / without the proxy running. The chat UI imports THIS and never
+ * changes.
+ */
+const PROXY_URL = process.env.EXPO_PUBLIC_AI_PROXY_URL;
+export const abrilChatService: AbrilChatService = PROXY_URL ? makeProxyService(PROXY_URL) : mockAbrilChatService;
+export const isUsingRealAI = !!PROXY_URL;
