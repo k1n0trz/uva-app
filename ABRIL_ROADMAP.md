@@ -189,14 +189,20 @@ WooCommerce, ficha §24.1/§25.2). Todo lo que va en `EXPO_PUBLIC_*` es legible 
 el APK. La app llama a un **proxy/orquestador**; el proxy tiene la key y aplica
 las reglas de seguridad.
 
-| # | Tarea | Dueño |
-|---|---|---|
-| 8.2 | **Elegir proveedor**: **DeepSeek V4 Pro** (recomendado — es el candidato de la ficha y da el mejor razonamiento conversacional). DeepInfra queda como alternativa por costo/latencia. Documentar la decisión tras una prueba real. | ⚪ Claude + 🟣 UVA (aprobar) |
-| 8.3 | **Proxy/orquestador mínimo** para pruebas: recibe el mensaje, aplica clasificación + reglas + filtro, llama a DeepSeek, devuelve texto + estado sugerido de Abril. La key por variable de entorno del servidor. (Versión completa = Codex, ficha §19.) | ⚪ Claude (stub) → 🔵 Codex (real) |
-| 8.4 | **System prompt / personalidad de Abril** codificada | ⚪ Claude |
-| 8.5 | **Reglas de seguridad en el prompt + filtro de salida**: no diagnostica, no promete anticoncepción/fertilidad, no infiere lo prohibido (§18.2), deriva a profesional ante dolor/alerta, no convierte todo en venta | ⚪ Claude |
-| 8.6 | **Swap del mock**: `services/abril/index.ts` pasa de mock a cliente del proxy. La UI del chat **no cambia** (ya está lista: burbujas, estados, calificar, "explícame de otra forma", breve/detallada) | ⚪ Claude |
-| 8.7 | **Mapear la respuesta a estados de Abril** para animar mientras conversa (dolor→`concerned`, etc.) | ⚪ Claude |
+| # | Tarea | Dueño | Estado |
+|---|---|---|---|
+| 8.2 | **Elegir proveedor**: **DeepSeek V4 Pro** | ⚪ Claude + 🟣 UVA (aprobar) | ✅ Elegido y probado. Nota: v4-pro es modelo de **razonamiento** (gasta tokens pensando → más latencia/costo). `deepseek-v4-flash` disponible si prima la latencia. |
+| 8.3 | **Proxy/orquestador mínimo** (key en el servidor) | ⚪ Claude (stub) → 🔵 Codex (real) | ✅ `apps/ai-proxy/server.mjs` — node sin dependencias, key por entorno |
+| 8.4 | **System prompt / personalidad de Abril** | ⚪ Claude | ✅ `apps/ai-proxy/abril-persona.mjs` |
+| 8.5 | **Reglas de seguridad en el prompt + filtro de salida** | ⚪ Claude | ✅ Verificado adversarial: no diagnostica, no promete anticoncepción, no infiere embarazo, deriva a profesional |
+| 8.6 | **Swap del mock** | ⚪ Claude | ✅ `services/abril` → cliente del proxy tras `EXPO_PUBLIC_AI_PROXY_URL` (mock como respaldo). UI sin cambios |
+| 8.7 | **Mapear la respuesta a estados de Abril** | ⚪ Claude | ✅ intent → estado del avatar (dolor→`concerned`, rutina→`guiding`) |
+
+**✅ Track IA funcionando** (commit `174a10c`): Abril conversa con `deepseek-v4-pro` dentro de la app, respeta los límites de salud, y dispara el banner de advertencia + la ruta a Rescate ante dolor. Correr el proxy: `DEEPSEEK_API_KEY=... node apps/ai-proxy/server.mjs`; la app con `EXPO_PUBLIC_AI_PROXY_URL=http://localhost:8787`.
+
+**Pendiente de pulido (no bloqueante):**
+- Inyectar el **contexto de la usuaria** (perfil, memoria, productos) y la **biblioteca UVA validada** al prompt (ficha §19) — hoy Abril responde sin ese contexto, así que a veces nombra funciones de forma aproximada.
+- Historial de conversación multi-turno hacia el proxy (hoy es por-turno).
 
 ### 8.2 Personalidad de Abril (borrador del system prompt — a refinar)
 
