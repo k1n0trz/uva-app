@@ -31,7 +31,10 @@ type Props = {
   source?: ImageSourcePropType;
 };
 
-const placeholderSource = require('../../assets/nav/nav-abril.png');
+// First real render of Abril from Blender (vera/abril-working.blend → renders/).
+// Static frame for now; the animated clips per state replace this per the
+// ABRIL_ROADMAP once rigging + animation are done.
+const placeholderSource = require('../../assets/abril/abril-idle.png');
 
 const ringColorByState: Record<AbrilState, string> = {
   idle: colors.primaryBorder,

@@ -53,3 +53,8 @@ data/ficha_extracted.txt
 # El .glb de 16MB no debería ir a git plano — usar Git LFS o almacenamiento aparte.
 # Descomenta la línea siguiente si prefieres excluirlo del repo por completo:
 # vera/*.glb
+
+# Blender working files (derivados; el .glb fuente ya está versionado)
+vera/*.blend
+vera/*.blend1
+vera/renders/
